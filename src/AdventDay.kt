@@ -1,3 +1,6 @@
+import kotlin.io.path.Path
+import kotlin.io.path.absolutePathString
+
 sealed class AdventDay(private val readFromStdIn: Boolean = false) {
 
   abstract fun solve()
@@ -6,8 +9,7 @@ sealed class AdventDay(private val readFromStdIn: Boolean = false) {
 
   fun getInputLines() =
     if (readFromStdIn) generateSequence { readLine() }.toList()
-    else this::class.java.getResource("/input/${this::class.java.simpleName}.in")
-      ?.openStream()?.bufferedReader()?.readLines()
+    else Path("src/input/${this::class.java.simpleName}.in").toFile().readLines()
 
   companion object {
     val all = AdventDay::class.sealedSubclasses
