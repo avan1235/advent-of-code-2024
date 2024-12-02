@@ -14,5 +14,6 @@ internal class AdventTest {
 
   private val expectedOutputs = listOf(
     "2904518\n18650129\n",
+    "486\n540\n",
   )
 }
