@@ -108,6 +108,46 @@ interface Graph<Node> {
   }
 }
 
+fun <Node> Map<Node, Set<Node>>.topologicalSort(): List<Node> = let { graph ->
+  val inCount = DefaultMap<Node, Int>(0)
+  for ((vertex, neighbours) in graph) {
+    if (vertex !in inCount) {
+      inCount[vertex] = 0
+    }
+    for (n in neighbours) {
+      inCount[n] += 1
+    }
+  }
+
+  val queue = ArrayDeque<Node>()
+  for ((vertex, edges) in inCount) {
+    if (edges == 0) {
+      queue += vertex
+    }
+  }
+
+  val result = mutableListOf<Node>()
+
+  while (true) {
+    val vertex = queue.removeFirstOrNull() ?: break
+    result += vertex
+
+    for (successor in graph[vertex].orEmpty()) {
+      inCount[successor] = inCount[successor] - 1
+      if (inCount[successor] == 0) {
+        queue += successor
+      }
+    }
+  }
+
+  if (result.size != inCount.size) {
+    error("Cycle in graph detected, topological sort not possible")
+  }
+
+  return result
+}
+
+
 fun <T> List<T>.repeat(count: Int): List<T> = List(size * count) { this[it % size] }
 
 tailrec fun gcd(a: Long, b: Long): Long =
