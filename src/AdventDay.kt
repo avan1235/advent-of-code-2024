@@ -3,6 +3,9 @@ import kotlin.io.path.absolutePathString
 
 sealed class AdventDay(private val readFromStdIn: Boolean = false) {
 
+  private val _lines = mutableListOf<String>()
+  val lines: List<String> get() = _lines
+
   abstract suspend fun solve()
 
   inline fun <reified T> reads() = getInputLines().map { it.value<T>() }
@@ -10,6 +13,9 @@ sealed class AdventDay(private val readFromStdIn: Boolean = false) {
   fun getInputLines(): List<String> =
     if (readFromStdIn) generateSequence { readLine() }.toList()
     else Path("src/input/${this::class.java.simpleName}.in").toFile().readLines()
+
+  fun <T> T.printIt(): T =
+    also { _lines.add(it.toString()) }
 
   companion object {
     val all = AdventDay::class.sealedSubclasses
