@@ -1,5 +1,5 @@
 data object Day4 : AdventDay() {
-  override fun solve() {
+  override suspend fun solve() {
     val lines = reads<String>() ?: return
 
     val map = lines.toMap()

@@ -1,7 +1,10 @@
 import GuardMap.Direction.*
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
 
 data object Day6 : AdventDay() {
-  override fun solve() {
+  override suspend fun solve() {
     val lines = reads<String>() ?: return
 
     val map = lines.toGuardMap()
@@ -11,18 +14,18 @@ data object Day6 : AdventDay() {
       .count()
       .printIt()
 
-    var count = 0
-    for (y in 0..<map.ySize) for (x in 0..<map.xSize) {
-      val newObstacle = x to y
-      if (newObstacle in map.obstacles) continue
-      if (newObstacle == map.guard) continue
+    coroutineScope {
+      buildList {
+        for (y in 0..<map.ySize) for (x in 0..<map.xSize) async {
+          val newObstacle = x to y
+          if (newObstacle in map.obstacles) return@async false
+          if (newObstacle == map.guard) return@async false
 
-      val newMap = map.copy(obstacles = map.obstacles + newObstacle)
-      if (newMap.isLooping) {
-        count += 1
-      }
-    }
-    count.printIt()
+          val newMap = map.copy(obstacles = map.obstacles + newObstacle)
+          newMap.isLooping
+        }.let { add(it) }
+      }.awaitAll()
+    }.count { it }.printIt()
   }
 }
 private typealias V2 = Pair<Int, Int>

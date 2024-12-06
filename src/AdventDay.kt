@@ -3,7 +3,7 @@ import kotlin.io.path.absolutePathString
 
 sealed class AdventDay(private val readFromStdIn: Boolean = false) {
 
-  abstract fun solve()
+  abstract suspend fun solve()
 
   inline fun <reified T> reads() = getInputLines()?.map { it.value<T>() }
 

@@ -1,5 +1,5 @@
 data object Day5 : AdventDay() {
-  override fun solve() {
+  override suspend fun solve() {
     val lines = reads<String>() ?: return
 
     val (rawRules, rawUpdates) = lines.groupSeparatedBy(separator = { it == "" }) { it }
