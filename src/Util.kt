@@ -60,13 +60,6 @@ class LazyDefaultMap<K, V>(
 
 fun <K, V> Map<K, V>.toLazyDefaultMap(default: () -> V) = LazyDefaultMap(default, toMutableMap())
 
-fun catchSystemOut(action: () -> Unit) = ByteArrayOutputStream().also {
-  val originalOut = System.out
-  System.setOut(PrintStream(it))
-  action()
-  System.setOut(originalOut)
-}.toString()
-
 interface Graph<Node> {
   enum class SearchType { DFS, BFS }
 

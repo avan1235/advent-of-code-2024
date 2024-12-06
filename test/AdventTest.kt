@@ -1,13 +1,15 @@
+import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
 internal class AdventTest {
 
   @Test
-  fun `test days outputs`() {
+  fun `test days outputs`() = runTest {
+    val days = solveAdventDays()
     expectedOutputs.forEachIndexed { idx, expect ->
-      val out = catchSystemOut { AdventDay.all[idx].solve() }
-      assertEquals(expect, out)
+      val out = days[idx].lines.joinToString("\n", postfix = "\n")
+      assertEquals(expect, out, "Day ${idx + 1} output is not as expected")
     }
     println("Passed tests for ${expectedOutputs.size} days")
   }
