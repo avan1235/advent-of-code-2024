@@ -5,7 +5,7 @@ import kotlinx.coroutines.coroutineScope
 
 data object Day6 : AdventDay() {
   override suspend fun solve() {
-    val lines = reads<String>() ?: return
+    val lines = reads<String>()
 
     val map = lines.toGuardMap()
     generateSequence(map) { it.moveOnMap() }

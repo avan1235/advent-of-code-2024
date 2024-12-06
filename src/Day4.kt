@@ -1,6 +1,6 @@
 data object Day4 : AdventDay() {
   override suspend fun solve() {
-    val lines = reads<String>() ?: return
+    val lines = reads<String>()
 
     val map = lines.toMap()
 

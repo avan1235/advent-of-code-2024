@@ -5,9 +5,9 @@ sealed class AdventDay(private val readFromStdIn: Boolean = false) {
 
   abstract suspend fun solve()
 
-  inline fun <reified T> reads() = getInputLines()?.map { it.value<T>() }
+  inline fun <reified T> reads() = getInputLines().map { it.value<T>() }
 
-  fun getInputLines() =
+  fun getInputLines(): List<String> =
     if (readFromStdIn) generateSequence { readLine() }.toList()
     else Path("src/input/${this::class.java.simpleName}.in").toFile().readLines()
 
