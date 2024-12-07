@@ -1,3 +1,6 @@
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
 import java.io.ByteArrayOutputStream
 import java.io.PrintStream
 
@@ -140,6 +143,10 @@ fun <Node> Map<Node, Set<Node>>.topologicalSort(): List<Node> = let { graph ->
 
 
 fun <T> List<T>.repeat(count: Int): List<T> = List(size * count) { this[it % size] }
+
+suspend fun <T> Iterable<T>.parallelSumOf(selector: (T) -> Long): Long = coroutineScope {
+  map { async { selector(it) } }.awaitAll().sum()
+}
 
 tailrec fun gcd(a: Long, b: Long): Long =
   if (b == 0L) a else gcd(b, a % b)
