@@ -1,5 +1,4 @@
 import kotlin.io.path.Path
-import kotlin.io.path.absolutePathString
 
 sealed class AdventDay(private val readFromStdIn: Boolean = false) {
 
