@@ -28,9 +28,6 @@ data object Day6 : AdventDay() {
     }.count { it }.printIt()
   }
 }
-private typealias V2 = Pair<Int, Int>
-
-private operator fun V2.plus(other: V2) = first + other.first to second + other.second
 
 private data class GuardMap(
   val guard: V2,

@@ -8,7 +8,7 @@ internal class AdventTest {
   fun `test days outputs`() = runTest {
     val days = solveAdventDays()
     expectedOutputs.forEachIndexed { idx, expect ->
-      val out = days[idx].lines.joinToString("\n", postfix = "\n")
+      val out = days[idx].first.lines.joinToString("\n", postfix = "\n")
       assertEquals(expect, out, "Day ${idx + 1} output is not as expected")
     }
     println("Passed tests for ${expectedOutputs.size} days")
@@ -22,5 +22,6 @@ internal class AdventTest {
     "6242\n5169\n",
     "4883\n1655\n",
     "6392012777720\n61561126043536\n",
+    "381\n1184\n",
   )
 }

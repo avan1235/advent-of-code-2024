@@ -54,6 +54,3 @@ private fun DefaultMap<Pair<Int, Int>, Char>.countXMAS(): Int = let { map ->
     }
   }
 }
-
-private operator fun Int.times(other: Pair<Int, Int>) = Pair(other.first * this, other.second * this)
-private operator fun Pair<Int, Int>.plus(other: Pair<Int, Int>) = Pair(first + other.first, second + other.second)

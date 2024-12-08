@@ -148,6 +148,24 @@ suspend fun <T> Iterable<T>.parallelSumOf(selector: (T) -> Long): Long = corouti
   map { async { selector(it) } }.awaitAll().sum()
 }
 
+typealias V2 = Pair<Int, Int>
+
+operator fun V2.plus(other: V2) = first + other.first to second + other.second
+
+operator fun V2.minus(other: V2) = first - other.first to second - other.second
+
+operator fun Int.times(other: V2) = Pair(other.first * this, other.second * this)
+
+fun <T> T.runIf(condition: Boolean, f: T.() -> T): T = if (condition) f() else this
+
+val List<String>.size2D: Pair<Int, Int>
+  get() {
+    val sizeX = map2Set { it.length }.single()
+    val sizeY = size
+    return sizeX to sizeY
+  }
+
+
 tailrec fun gcd(a: Long, b: Long): Long =
   if (b == 0L) a else gcd(b, a % b)
 
