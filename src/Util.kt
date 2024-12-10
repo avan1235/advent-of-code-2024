@@ -66,11 +66,13 @@ fun <K, V> Map<K, V>.toLazyDefaultMap(default: () -> V) = LazyDefaultMap(default
 interface Graph<Node> {
   enum class SearchType { DFS, BFS }
 
+  val nodes: Sequence<Node>
+
   fun neighbours(node: Node): Sequence<Node>
 
   fun search(
     from: Node,
-    type: SearchType,
+    type: SearchType = SearchType.DFS,
     checkIfVisited: Boolean = true,
     checkIfOnQueue: Boolean = false,
     visit: (from: Node, to: Node, toDistance: Int) -> Boolean = { _, _, _ -> true },
@@ -157,6 +159,11 @@ operator fun V2.minus(other: V2) = first - other.first to second - other.second
 operator fun Int.times(other: V2) = Pair(other.first * this, other.second * this)
 
 fun <T> T.runIf(condition: Boolean, f: T.() -> T): T = if (condition) f() else this
+
+@JvmInline
+value class Matrix2D<T : Any>(val data: List<List<T>>) {
+  operator fun get(v: V2): T? = data.getOrNull(v.second)?.getOrNull(v.first)
+}
 
 val List<String>.size2D: Pair<Int, Int>
   get() {
