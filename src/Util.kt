@@ -146,8 +146,8 @@ fun <Node> Map<Node, Set<Node>>.topologicalSort(): List<Node> = let { graph ->
 
 fun <T> List<T>.repeat(count: Int): List<T> = List(size * count) { this[it % size] }
 
-suspend fun <T> Iterable<T>.parallelSumOf(selector: (T) -> Long): Long = coroutineScope {
-  map { async { selector(it) } }.awaitAll().sum()
+suspend fun <T, U> Iterable<T>.parallelMap(selector: (T) -> U): List<U> = coroutineScope {
+  map { async { selector(it) } }.awaitAll()
 }
 
 typealias V2 = Pair<Int, Int>

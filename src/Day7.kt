@@ -30,7 +30,7 @@ data object Day7 : AdventDay() {
 private suspend inline fun List<Pair<Long, List<Long>>>.fold(
   radix: Int,
   crossinline f: (result: Long, element: Long, bit: Int) -> Long,
-): Long = parallelSumOf sum@{ (result, parts) ->
+): Long = parallelMap sum@{ (result, parts) ->
   val bits = parts.size - 1
 
   for (mask in 0..<radix.toDouble().pow(bits).toInt()) {
@@ -47,5 +47,5 @@ private suspend inline fun List<Pair<Long, List<Long>>>.fold(
     if (currResult == result) return@sum result
   }
   0L
-}
+}.sum()
 
