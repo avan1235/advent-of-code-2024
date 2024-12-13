@@ -3,6 +3,8 @@ import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 import java.io.ByteArrayOutputStream
 import java.io.PrintStream
+import java.math.BigDecimal
+import java.math.BigInteger
 
 inline fun <T : Any> runIf(c: Boolean, action: () -> T): T? = if (c) action() else null
 
@@ -183,6 +185,18 @@ tailrec fun gcd(a: Int, b: Int): Int =
   if (b == 0) a else gcd(b, a % b)
 
 fun lcm(a: Int, b: Int): Int =
+  a / gcd(a, b) * b
+
+tailrec fun gcd(a: BigInteger, b: BigInteger): BigInteger =
+  if (b == BigInteger.ZERO) a else gcd(b, a % b)
+
+fun lcm(a: BigInteger, b: BigInteger): BigInteger =
+  a / gcd(a, b) * b
+
+tailrec fun gcd(a: BigDecimal, b: BigDecimal): BigDecimal =
+  if (b == BigDecimal.ZERO) a else gcd(b, a % b)
+
+fun lcm(a: BigDecimal, b: BigDecimal): BigDecimal =
   a / gcd(a, b) * b
 
 inline fun <T, R> Iterable<T>.map2Set(
