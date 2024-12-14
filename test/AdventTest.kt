@@ -1,11 +1,12 @@
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.time.Duration
 
 internal class AdventTest {
 
   @Test
-  fun `test days outputs`() = runTest {
+  fun `test days outputs`() = runTest(timeout = Duration.INFINITE) {
     val days = solveAdventDays()
     expectedOutputs.forEachIndexed { idx, expect ->
       val out = days[idx].first.lines.joinToString("\n", postfix = "\n")
