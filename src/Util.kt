@@ -1,8 +1,6 @@
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
-import java.io.ByteArrayOutputStream
-import java.io.PrintStream
 import java.math.BigDecimal
 import java.math.BigInteger
 
@@ -157,6 +155,14 @@ typealias V2 = Pair<Int, Int>
 operator fun V2.plus(other: V2) = first + other.first to second + other.second
 
 operator fun V2.minus(other: V2) = first - other.first to second - other.second
+
+operator fun V2.rem(v: Int) = first % v to second % v
+
+operator fun V2.rem(v: V2) = first % v.first to second % v.second
+
+fun V2.mod(v: Int) = first.mod(v) to second.mod(v)
+
+fun V2.mod(v: V2) = first.mod(v.first) to second.mod(v.second)
 
 operator fun Int.times(other: V2) = Pair(other.first * this, other.second * this)
 
