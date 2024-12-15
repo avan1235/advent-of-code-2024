@@ -23,7 +23,7 @@ It's enough to create some Kotlin `object` that inherits from `AdventDay` to get
 interested in the details, let's look into the definition of the [Advent.kt](./src/main/kotlin/Advent.kt)
 to see how to find all `object` classes in Kotlin and run some method on them 😎.
 
-To run all solutions, simply call `./amper run`
+To run all solutions, simply call `./gradlew run`
 
 ### Tests
 
@@ -32,7 +32,7 @@ Advent has its expected output defined in [AdventTest.kt](./src/test/kotlin/Adve
 verify correct state of the outputs for days we run every day solution and catch it standard output stream
 to compare it with expected value.
 
-To run all tests, simply call `./amper test`
+To run all tests, simply call `./gradlew test`
 
 ## Problems
 
