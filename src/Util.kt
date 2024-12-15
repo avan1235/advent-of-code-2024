@@ -152,6 +152,8 @@ suspend fun <T, U> Iterable<T>.parallelMap(selector: (T) -> U): List<U> = corout
 
 typealias V2 = Pair<Int, Int>
 
+operator fun V2.unaryMinus() = -first to -second
+
 operator fun V2.plus(other: V2) = first + other.first to second + other.second
 
 operator fun V2.minus(other: V2) = first - other.first to second - other.second
@@ -165,6 +167,14 @@ fun V2.mod(v: Int) = first.mod(v) to second.mod(v)
 fun V2.mod(v: V2) = first.mod(v.first) to second.mod(v.second)
 
 operator fun Int.times(other: V2) = Pair(other.first * this, other.second * this)
+
+fun Char.toMove(): V2 = when (this) {
+  '>' -> 1 to 0
+  '<' -> -1 to 0
+  '^' -> 0 to -1
+  'v' -> 0 to 1
+  else -> error("unknown move char $this")
+}
 
 fun <T> T.runIf(condition: Boolean, f: T.() -> T): T = if (condition) f() else this
 
