@@ -11,7 +11,8 @@ sealed class AdventDay(private val readFromStdIn: Boolean = false) {
 
   fun getInputLines(): List<String> =
     if (readFromStdIn) generateSequence { readLine() }.toList()
-    else Path("src/input/${this::class.java.simpleName}.in").toFile().readLines()
+    else this::class.java.getResource("/input/${this::class.java.simpleName}.in")
+      ?.openStream()?.bufferedReader()?.readLines().orEmpty()
 
   fun <T> T.printIt(): T =
     also { _lines.add(it.toString()) }
