@@ -3,6 +3,11 @@ import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 import java.math.BigDecimal
 import java.math.BigInteger
+import java.util.*
+import kotlin.collections.ArrayDeque
+import kotlin.math.abs
+import kotlin.math.min
+import kotlin.math.sign
 
 inline fun <T : Any> runIf(c: Boolean, action: () -> T): T? = if (c) action() else null
 
@@ -146,9 +151,15 @@ fun <Node> Map<Node, Set<Node>>.topologicalSort(): List<Node> = let { graph ->
 
 fun <T> List<T>.repeat(count: Int): List<T> = List(size * count) { this[it % size] }
 
-suspend fun <T, U> Iterable<T>.parallelMap(selector: (T) -> U): List<U> = coroutineScope {
+suspend fun <T, U> Iterable<T>.parallelMap(selector: suspend (T) -> U): List<U> = coroutineScope {
   map { async { selector(it) } }.awaitAll()
 }
+
+suspend fun <T> Iterable<T>.parallelFilter(selector: suspend (T) -> Boolean): List<T> =
+  parallelMap { it to selector(it) }.filter { it.second }.map { it.first }
+
+suspend fun <T> Iterable<T>.parallelCount(selector: suspend (T) -> Boolean): Int =
+  parallelMap { selector(it) }.count { it }
 
 typealias V2 = Pair<Int, Int>
 
@@ -167,6 +178,12 @@ fun V2.mod(v: Int) = first.mod(v) to second.mod(v)
 fun V2.mod(v: V2) = first.mod(v.first) to second.mod(v.second)
 
 operator fun Int.times(other: V2) = Pair(other.first * this, other.second * this)
+
+val V2.length: Int get() = first * first + second * second
+
+val V2.abs: V2 get() = abs(first) to abs(second)
+
+val V2.normalized: V2 get() = first.sign * min(1, abs(first)) to second.sign * min(1, abs(second))
 
 fun Char.toMove(): V2 = when (this) {
   '>' -> 1 to 0
@@ -189,7 +206,6 @@ val List<String>.size2D: Pair<Int, Int>
     val sizeY = size
     return sizeX to sizeY
   }
-
 
 tailrec fun gcd(a: Long, b: Long): Long =
   if (b == 0L) a else gcd(b, a % b)
@@ -220,3 +236,58 @@ inline fun <T, R> Iterable<T>.map2Set(
   transform: (T) -> R,
 ): MutableSet<R> =
   destination.apply { for (item in this@map2Set) add(transform(item)) }
+
+class WeightedGraph<N, ECtx>(
+  private val adj: Map<N, List<E<N, ECtx>>>,
+) {
+  data class E<N, E>(val to: N, val context: E)
+  data class QN<N, DC>(val n: N, val distance: D<DC>)
+  data class D<DC>(val value: BigDecimal, val context: DC)
+
+  val nodes: List<N> = adj.keys.toList()
+
+  fun <DC> shortestPaths(
+    source: N,
+    startDistanceContext: DC,
+    zeroDistanceContext: DC,
+    maxDistanceContext: DC,
+    cost: (from: QN<N, DC>, to: E<N, ECtx>) -> BigDecimal,
+    alterContext: (to: E<N, ECtx>, altDistance: BigDecimal) -> DC
+  ): DefaultMap<N, D<DC>> {
+
+    val dist = DefaultMap<N, D<DC>>(D(BigDecimal.ZERO, zeroDistanceContext))
+    val queue = PriorityQueue<QN<N, DC>>(compareBy(selector = { it.distance.value }))
+
+    adj.keys.forEach { v ->
+      if (v != source) dist[v] = D(BigDecimal.valueOf(Long.MAX_VALUE), maxDistanceContext)
+      queue += if (v != source) QN(v, dist[v]) else QN(source, D(BigDecimal.ZERO, startDistanceContext))
+    }
+
+    while (queue.isNotEmpty()) {
+      val u = queue.remove()
+
+      if (u.distance.context == null) break
+
+      adj[u.n]?.forEach neigh@{ edge ->
+        val alt = dist[u.n].value + cost(u, edge)
+
+        if (alt >= dist[edge.to].value) return@neigh
+
+        val altDist = D(alt, alterContext(edge, alt))
+        dist[edge.to] = altDist
+        queue += QN(edge.to, altDist)
+      }
+    }
+    return dist
+  }
+
+  fun <DC> shortestPath(
+    source: N,
+    destination: N,
+    startDistanceContext: DC,
+    zeroDistanceContext: DC,
+    maxDistanceContext: DC,
+    cost: (from: QN<N, DC>, to: E<N, ECtx>) -> BigDecimal,
+    alterContext: (to: E<N, ECtx>, altDistance: BigDecimal) -> DC,
+  ): D<DC> = shortestPaths(source, startDistanceContext, zeroDistanceContext, maxDistanceContext, cost, alterContext)[destination]
+}
