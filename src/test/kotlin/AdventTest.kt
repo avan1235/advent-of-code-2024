@@ -1,36 +1,41 @@
-import kotlinx.coroutines.test.runTest
-import kotlin.test.Test
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.runBlocking
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.Arguments.arguments
+import org.junit.jupiter.params.provider.MethodSource
 import kotlin.test.assertEquals
-import kotlin.time.Duration
+import java.util.stream.Stream.of as streamOf
 
 internal class AdventTest {
 
-  @Test
-  fun `test days outputs`() = runTest(timeout = Duration.INFINITE) {
-    val days = solveAdventDays()
-    expectedOutputs.forEachIndexed { idx, expect ->
-      val out = days[idx].first.lines.joinToString("\n", postfix = "\n")
-      assertEquals(expect, out, "Day ${idx + 1} output is not as expected")
-    }
-    println("Passed tests for ${expectedOutputs.size} days")
+  @OptIn(ExperimentalCoroutinesApi::class)
+  @ParameterizedTest
+  @MethodSource("provideDaysWithExpectedOutputs")
+  fun `test advent day`(day: AdventDay, part1: String, part2: String) = runBlocking(Dispatchers.Default) {
+    val output = day.apply { solve() }.lines
+    assertEquals(listOf(part1, part2), output, "${day::class.simpleName} output is not as expected")
   }
 
-  private val expectedOutputs = listOf(
-    "2904518\n18650129\n",
-    "486\n540\n",
-    "189527826\n63013756\n",
-    "2593\n1950\n",
-    "6242\n5169\n",
-    "4883\n1655\n",
-    "6392012777720\n61561126043536\n",
-    "381\n1184\n",
-    "6385338159127\n6415163624282\n",
-    "822\n1801\n",
-    "220722\n261952051690787\n",
-    "1549354\n937032\n",
-    "26299\n107824497933339\n",
-    "230461440\n6668\n",
-    "1465523\n1471049\n",
-    "93436\n486\n",
-  )
+  companion object {
+    @JvmStatic
+    private fun provideDaysWithExpectedOutputs() = streamOf(
+      arguments(Day1, "2904518", "18650129"),
+      arguments(Day2, "486", "540"),
+      arguments(Day3, "189527826", "63013756"),
+      arguments(Day4, "2593", "1950"),
+      arguments(Day5, "6242", "5169"),
+      arguments(Day6, "4883", "1655"),
+      arguments(Day7, "6392012777720", "61561126043536"),
+      arguments(Day8, "381", "1184"),
+      arguments(Day9, "6385338159127", "6415163624282"),
+      arguments(Day10, "822", "1801"),
+      arguments(Day11, "220722", "261952051690787"),
+      arguments(Day12, "1549354", "937032"),
+      arguments(Day13, "26299", "107824497933339"),
+      arguments(Day14, "230461440", "6668"),
+      arguments(Day15, "1465523", "1471049"),
+      arguments(Day16, "93436", "486"),
+    )
+  }
 }

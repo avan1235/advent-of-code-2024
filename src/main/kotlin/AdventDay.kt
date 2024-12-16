@@ -1,5 +1,3 @@
-import kotlin.io.path.Path
-
 sealed class AdventDay(private val readFromStdIn: Boolean = false) {
 
   private val _lines = mutableListOf<String>()
@@ -18,8 +16,9 @@ sealed class AdventDay(private val readFromStdIn: Boolean = false) {
     also { _lines.add(it.toString()) }
 
   companion object {
-    val all = AdventDay::class.sealedSubclasses
-      .mapNotNull { it.objectInstance }
-      .sortedBy { it::class.java.simpleName.removePrefix("Day").toInt() }
+    val all
+      get() = AdventDay::class.sealedSubclasses
+        .mapNotNull { it.objectInstance }
+        .sortedBy { it::class.java.simpleName.removePrefix("Day").toInt() }
   }
 }
