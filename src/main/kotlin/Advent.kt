@@ -11,7 +11,7 @@ import kotlin.time.measureTime
 import kotlin.time.measureTimedValue
 
 suspend fun main() {
-  val now = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
+  val now = Clock.System.now().toLocalDateTime(TimeZone.of("UTC-5"))
   val (solved, duration) = measureTimedValue {
     solveAdventDays(
       solve = { day -> now.run { monthNumber != 12 || dayOfMonth > 25 || dayOfMonth == day } }
