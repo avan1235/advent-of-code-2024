@@ -28,14 +28,14 @@ private fun List<String>.toTopographicMap(): Graph<V2> = let { lines ->
       1 to 0, 0 to 1, -1 to 0, 0 to -1,
     )
 
-    override val nodes = sequence {
-      for (y in 0..<sizeY) for (x in 0..<sizeX) yield(x to y)
+    override val nodes: Sequence<V2> = sequence {
+      for (y in 0..<sizeY) for (x in 0..<sizeX) yield(x xy y)
     }
 
     override fun neighbours(node: V2) = sequence {
       val nodeHeight = data[node]?.digitToIntOrNull() ?: return@sequence
-      for (c in directions) {
-        val neighbour = node + c
+      for (c in Dir.entries) {
+        val neighbour = node + c.v
         val neighbourHeight = data[neighbour]?.digitToIntOrNull() ?: continue
         if (neighbourHeight != nodeHeight + 1) continue
 

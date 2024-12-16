@@ -6,7 +6,7 @@ data object Day16 : AdventDay() {
     val lines = reads<String>()
 
     val maze = lines.toReindeerMaze()
-    val shortestPath = maze.shortestPath(startDirection = Direction.E)
+    val shortestPath = maze.shortestPath(startDirection = Dir.E)
     shortestPath.value.printIt()
 
     maze.nodes.parallelCount { node ->
@@ -14,7 +14,7 @@ data object Day16 : AdventDay() {
         maze.start -> true
         maze.end -> true
         else -> {
-          val p1 = maze.shortestPath(startDirection = Direction.E, destination = node)
+          val p1 = maze.shortestPath(startDirection = Dir.E, destination = node)
           val p2 = maze.shortestPath(startDirection = p1.context!!, source = node)
           p1.value + p2.value == shortestPath.value
         }
@@ -24,17 +24,17 @@ data object Day16 : AdventDay() {
 }
 
 private class ReindeerMaze(
-  private val graph: WeightedGraph<V2, Direction>,
+  private val graph: WeightedGraph<V2, Dir>,
   val start: V2,
   val end: V2,
 ) {
   val nodes: List<V2> = graph.nodes
 
   fun shortestPath(
-    startDirection: Direction,
+    startDirection: Dir,
     source: V2 = start,
     destination: V2 = end
-  ): D<Direction?> = graph.shortestPath<Direction?>(
+  ): D<Dir?> = graph.shortestPath<Dir?>(
     source = source,
     destination = destination,
     startDistanceContext = startDirection,
@@ -59,12 +59,12 @@ private fun List<String>.toReindeerMaze(): ReindeerMaze {
 
   return buildMap {
     for (y in 0..<sizeY) for (x in 0..<sizeX) {
-      val c = x to y
+      val c = x xy y
       if (matrix[c] == '#') continue
       if (matrix[c] == 'S') start = c
       if (matrix[c] == 'E') end = c
 
-      Direction.entries.forEach {
+      Dir.entries.forEach {
         val n = c + it.v
         if (matrix[n] != '#') getOrPut(c) { mutableListOf() }.add(WeightedGraph.E(n, it))
       }
@@ -72,13 +72,4 @@ private fun List<String>.toReindeerMaze(): ReindeerMaze {
   }
     .let(::WeightedGraph)
     .let { ReindeerMaze(it, start!!, end!!) }
-}
-
-private enum class Direction(val v: V2) {
-  N(0 to -1), S(0 to 1), E(1 to 0), W(-1 to 0);
-
-  val reversed: Direction
-    get() = when (this) {
-      N -> S; E -> W; S -> N; W -> E
-    }
 }

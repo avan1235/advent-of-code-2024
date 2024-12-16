@@ -161,35 +161,37 @@ suspend fun <T> Iterable<T>.parallelFilter(selector: suspend (T) -> Boolean): Li
 suspend fun <T> Iterable<T>.parallelCount(selector: suspend (T) -> Boolean): Int =
   parallelMap { selector(it) }.count { it }
 
-typealias V2 = Pair<Int, Int>
+data class V2(val first: Int, val second: Int)
 
-operator fun V2.unaryMinus() = -first to -second
+infix fun Int.xy(i: Int): V2 = V2(this, i)
 
-operator fun V2.plus(other: V2) = first + other.first to second + other.second
+operator fun V2.unaryMinus(): V2 = -first xy -second
 
-operator fun V2.minus(other: V2) = first - other.first to second - other.second
+operator fun V2.plus(other: V2): V2 = first + other.first xy second + other.second
 
-operator fun V2.rem(v: Int) = first % v to second % v
+operator fun V2.minus(other: V2): V2 = first - other.first xy second - other.second
 
-operator fun V2.rem(v: V2) = first % v.first to second % v.second
+operator fun V2.rem(v: Int): V2 = first % v xy second % v
 
-fun V2.mod(v: Int) = first.mod(v) to second.mod(v)
+operator fun V2.rem(v: V2): V2 = first % v.first xy second % v.second
 
-fun V2.mod(v: V2) = first.mod(v.first) to second.mod(v.second)
+fun V2.mod(v: Int): V2 = first.mod(v) xy second.mod(v)
 
-operator fun Int.times(other: V2) = Pair(other.first * this, other.second * this)
+fun V2.mod(v: V2): V2 = first.mod(v.first) xy second.mod(v.second)
 
-val V2.length: Int get() = first * first + second * second
+operator fun Int.times(other: V2): V2 = other.first * this xy other.second * this
 
-val V2.abs: V2 get() = abs(first) to abs(second)
+val V2.length: Long get() = first.toLong() * first.toLong() + second.toLong() * second.toLong()
 
-val V2.normalized: V2 get() = first.sign * min(1, abs(first)) to second.sign * min(1, abs(second))
+val V2.abs: V2 get() = abs(first) xy abs(second)
+
+val V2.normalized: V2 get() = first.sign * min(1, abs(first)) xy second.sign * min(1, abs(second))
 
 fun Char.toMove(): V2 = when (this) {
-  '>' -> 1 to 0
-  '<' -> -1 to 0
-  '^' -> 0 to -1
-  'v' -> 0 to 1
+  '>' -> 1 xy 0
+  '<' -> -1 xy 0
+  '^' -> 0 xy -1
+  'v' -> 0 xy 1
   else -> error("unknown move char $this")
 }
 
@@ -200,11 +202,11 @@ value class Matrix2D<T : Any>(val data: List<List<T>>) {
   operator fun get(v: V2): T? = data.getOrNull(v.second)?.getOrNull(v.first)
 }
 
-val List<String>.size2D: Pair<Int, Int>
+val List<String>.size2D: V2
   get() {
     val sizeX = map2Set { it.length }.single()
     val sizeY = size
-    return sizeX to sizeY
+    return sizeX xy sizeY
   }
 
 tailrec fun gcd(a: Long, b: Long): Long =
@@ -289,5 +291,21 @@ class WeightedGraph<N, ECtx>(
     maxDistanceContext: DC,
     cost: (from: QN<N, DC>, to: E<N, ECtx>) -> BigDecimal,
     alterContext: (to: E<N, ECtx>, altDistance: BigDecimal) -> DC,
-  ): D<DC> = shortestPaths(source, startDistanceContext, zeroDistanceContext, maxDistanceContext, cost, alterContext)[destination]
+  ): D<DC> = shortestPaths(
+    source,
+    startDistanceContext,
+    zeroDistanceContext,
+    maxDistanceContext,
+    cost,
+    alterContext
+  )[destination]
+}
+
+enum class Dir(val v: V2) {
+  N(0 xy -1), E(1 xy 0), S(0 xy 1), W(-1 xy 0);
+
+  val reversed: Dir
+    get() = when (this) {
+      N -> S; E -> W; S -> N; W -> E
+    }
 }

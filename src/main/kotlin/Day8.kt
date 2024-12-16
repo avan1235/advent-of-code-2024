@@ -51,7 +51,7 @@ private fun List<String>.toAntennas(): LazyDefaultMap<Char, MutableList<V2>> = l
   ).also { nodes ->
     lines.forEachIndexed { y, line ->
       line.forEachIndexed { x, c ->
-        if (c != '.') nodes[c] += x to y
+        if (c != '.') nodes[c] += x xy y
       }
     }
   }

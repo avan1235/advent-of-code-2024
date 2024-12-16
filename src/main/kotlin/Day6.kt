@@ -17,7 +17,7 @@ data object Day6 : AdventDay() {
     coroutineScope {
       buildList {
         for (y in 0..<map.ySize) for (x in 0..<map.xSize) async {
-          val newObstacle = x to y
+          val newObstacle = x xy y
           if (newObstacle in map.obstacles) return@async false
           if (newObstacle == map.guard) return@async false
 
@@ -67,7 +67,7 @@ private data class GuardMap(
     return buildString {
       for (y in 0..<ySize) {
         for (x in 0..<xSize) {
-          val c = x to y
+          val c = x xy y
           if (c in obstacles) append('#')
           else if (c == guard) append(
             when (direction) {
@@ -111,7 +111,7 @@ private fun List<String>.toGuardMap(): GuardMap = let { lines ->
   val obstacles = mutableSetOf<V2>()
   for (y in 0..<ySize) for (x in 0..<xSize) {
     val char = lines[y][x]
-    val v = x to y
+    val v = x xy y
     when (char) {
       '#' -> obstacles += v
       '>' -> guardDirection = v to R

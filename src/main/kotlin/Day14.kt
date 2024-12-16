@@ -39,7 +39,7 @@ data object Day14 : AdventDay() {
 
 private suspend fun List<Robot>.matchesExpectedImage(): Boolean {
   val image = Array(MapSize.second) { ByteArray(MapSize.first) }
-  for (y in 0..<MapSize.second) for (x in 0..<MapSize.first) if (any { it.p == x to y }) image[y][x] = 1
+  for (y in 0..<MapSize.second) for (x in 0..<MapSize.first) if (any { it.p == x xy y }) image[y][x] = 1
 
   val (sizeX, sizeY) = ExpectedImageSize
   return coroutineScope {
@@ -85,7 +85,7 @@ private data class Robot(val p: V2, val v: V2) {
 
 private fun String.toRobot(): Robot = RobotRegex.matchEntire(this)!!.groups.let {
   Robot(
-    p = it["x"]!!.value.toInt() to it["y"]!!.value.toInt(), v = it["vx"]!!.value.toInt() to it["vy"]!!.value.toInt()
+    p = it["x"]!!.value.toInt() xy it["y"]!!.value.toInt(), v = it["vx"]!!.value.toInt() xy it["vy"]!!.value.toInt()
   )
 }
 

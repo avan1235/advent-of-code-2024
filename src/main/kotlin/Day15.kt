@@ -62,9 +62,9 @@ private fun List<String>.toWarehouseMap(): WarehouseMap {
     for (y in 0..<sizeY) for (x in 0..<sizeX) {
       val c = this@toWarehouseMap[y][x]
       when (c) {
-        '@' -> robot = x to y
-        '#' -> put(x to y, WALL)
-        'O' -> put(x to y, BOX)
+        '@' -> robot = x xy y
+        '#' -> put(x xy y, WALL)
+        'O' -> put(x xy y, BOX)
       }
     }
   }
@@ -97,10 +97,10 @@ private data class WideWarehouseMap(
             remove(nextRobot)
 
             val sign = -move.first
-            generateSequence(firstFree) { it + sign * (1 to 0) }
+            generateSequence(firstFree) { it + sign * Dir.E.v }
               .takeWhile { if (c == '<') it.first < nextRobot.first else it.first > nextRobot.first }
               .forEach { put(it, if (c == '<') LBOX else RBOX) }
-            generateSequence(firstFree + sign * (1 to 0)) { it + sign * (2 to 0) }
+            generateSequence(firstFree + sign * Dir.E.v) { it + sign * 2 * Dir.E.v }
               .takeWhile { if (c == '<') it.first < nextRobot.first else it.first > nextRobot.first }
               .forEach { put(it, if (c == '<') RBOX else LBOX) }
           }
@@ -111,7 +111,7 @@ private data class WideWarehouseMap(
           null -> true
           WWALL -> false
           LBOX, RBOX -> {
-            val pairCord = if (element == LBOX) cord + (1 to 0) else cord + (-1 to 0)
+            val pairCord = if (element == LBOX) cord + Dir.E.v else cord + Dir.W.v
             val canMove = canMoveTo(cord + move) && canMoveTo(pairCord + move)
             if (canMove) {
               movedElements += cord to if (element == LBOX) LBOX else RBOX
@@ -146,19 +146,19 @@ private fun List<String>.toWideWarehouseMap(): WideWarehouseMap {
     for (y in 0..<sizeY) for (x in 0..<sizeX) {
       val c = this@toWideWarehouseMap[y][x]
       when (c) {
-        '@' -> robot = 2 * x to y
+        '@' -> robot = 2 * x xy y
 
         '#' -> {
-          put(2 * x to y, WWALL)
-          put(2 * x + 1 to y, WWALL)
+          put(2 * x xy y, WWALL)
+          put(2 * x + 1 xy y, WWALL)
         }
 
         'O' -> {
-          put(2 * x to y, LBOX)
-          put(2 * x + 1 to y, RBOX)
+          put(2 * x xy y, LBOX)
+          put(2 * x + 1 xy y, RBOX)
         }
       }
     }
   }
-  return WideWarehouseMap(robot ?: error("No robot on map"), elements, 2 * sizeX to sizeY)
+  return WideWarehouseMap(robot ?: error("No robot on map"), elements, 2 * sizeX xy sizeY)
 }

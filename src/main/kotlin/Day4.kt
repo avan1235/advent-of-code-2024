@@ -9,22 +9,22 @@ data object Day4 : AdventDay() {
   }
 }
 
-private fun List<String>.toMap(): DefaultMap<Pair<Int, Int>, Char> = flatMapIndexed { y, line ->
+private fun List<String>.toMap(): DefaultMap<V2, Char> = flatMapIndexed { y, line ->
   line.mapIndexed { x, c ->
-    Pair(x, y) to c
+    x xy y to c
   }
 }.toMap().toDefaultMap('.')
 
-private fun DefaultMap<Pair<Int, Int>, Char>.countXmas(): Int = let { map ->
+private fun DefaultMap<V2, Char>.countXmas(): Int = let { map ->
   val directions = listOf(
-    1 to 0,
-    -1 to 0,
-    0 to 1,
-    0 to -1,
-    1 to 1,
-    1 to -1,
-    -1 to 1,
-    -1 to -1,
+    1 xy 0,
+    -1 xy 0,
+    0 xy 1,
+    0 xy -1,
+    1 xy 1,
+    1 xy -1,
+    -1 xy 1,
+    -1 xy -1,
   )
   map.keys.toList().sumOf { curr ->
     directions.count { d ->
@@ -33,12 +33,12 @@ private fun DefaultMap<Pair<Int, Int>, Char>.countXmas(): Int = let { map ->
   }
 }
 
-private fun DefaultMap<Pair<Int, Int>, Char>.countXMAS(): Int = let { map ->
+private fun DefaultMap<V2, Char>.countXMAS(): Int = let { map ->
   val directions = listOf(
-    1 to 1,
-    1 to -1,
-    -1 to -1,
-    -1 to 1,
+    1 xy 1,
+    1 xy -1,
+    -1 xy -1,
+    -1 xy 1,
   )
   map.keys.toList().count { curr ->
     if (map[curr] != 'A') return@count false

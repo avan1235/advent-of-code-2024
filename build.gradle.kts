@@ -28,6 +28,6 @@ dependencies {
 }
 
 tasks.withType<Test> {
-  minHeapSize = "1g"
-  maxHeapSize = "2g"
+  minHeapSize = "16g"
+  maxHeapSize = "16g"
 }

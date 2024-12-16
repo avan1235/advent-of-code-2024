@@ -2,18 +2,17 @@ data object Day12 : AdventDay() {
   override suspend fun solve() {
     val lines = reads<String>()
     val m = Matrix2D(lines.map { it.toList() })
-    val basicDirections = listOf(0 to 1, 1 to 0, 0 to -1, -1 to 0)
 
     val g = object : Graph<V2> {
       override val nodes
         get() = lines.size2D.let { (sizeX, sizeY) ->
-          sequence { for (y in 0..<sizeY) for (x in 0..<sizeX) yield(x to y) }
+          sequence { for (y in 0..<sizeY) for (x in 0..<sizeX) yield(x xy y) }
         }
 
       override fun neighbours(node: V2) = sequence {
         val currC = m[node] ?: return@sequence
-        for (cv in basicDirections) {
-          val neigh = node + cv
+        for (cv in Dir.entries) {
+          val neigh = node + cv.v
           val neighC = m[neigh] ?: continue
           if (neighC != currC) continue
           yield(neigh)
@@ -44,7 +43,7 @@ data object Day12 : AdventDay() {
     }.printIt()
 
 
-    val directions = basicDirections.repeat(count = 2).zipWithNext().take(n = 4)
+    val directions = Dir.entries.map(Dir::v).repeat(count = 2).zipWithNext().take(n = 4)
     regions.sumOf { region ->
       region.sumOf { node ->
         directions.sumOf { (n1, n3) ->
