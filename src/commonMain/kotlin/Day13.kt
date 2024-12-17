@@ -1,4 +1,5 @@
-import java.math.BigInteger
+import com.ionspin.kotlin.bignum.integer.BigInteger
+import com.ionspin.kotlin.bignum.integer.toBigInteger
 
 data object Day13 : AdventDay() {
   override suspend fun solve() {
@@ -45,7 +46,7 @@ private fun Regex.extract(
       it.groups["x"],
       it.groups["y"],
     ).map {
-      BigInteger.valueOf(it!!.value.toLong()).let(f)
+      BigInteger.fromLong(it!!.value.toLong()).let(f)
     }
   }
 

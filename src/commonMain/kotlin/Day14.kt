@@ -1,10 +1,6 @@
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
-import java.awt.Color
-import java.awt.image.BufferedImage
-import java.io.File
-import javax.imageio.ImageIO
 
 data object Day14 : AdventDay() {
   override suspend fun solve() {
@@ -24,7 +20,7 @@ data object Day14 : AdventDay() {
     }
     counts.fold(1L) { acc, v -> acc * v }.printIt()
 
-    var curr = robots
+    var curr = robots.groupBy { it.p }
     var idx = 0
     find@ while (true) {
       if (curr.matchesExpectedImage()) {
@@ -37,17 +33,18 @@ data object Day14 : AdventDay() {
   }
 }
 
-private suspend fun List<Robot>.matchesExpectedImage(): Boolean {
-  val image = Array(MapSize.second) { ByteArray(MapSize.first) }
-  for (y in 0..<MapSize.second) for (x in 0..<MapSize.first) if (any { it.p == x xy y }) image[y][x] = 1
+private typealias Robots = Map<V2, List<Robot>>
 
+private suspend fun Robots.matchesExpectedImage(): Boolean {
   val (sizeX, sizeY) = ExpectedImageSize
   return coroutineScope {
     buildList {
       for (x in 0..<MapSize.first - sizeX) for (y in 0..<MapSize.second - sizeY) async {
         var match = true
         check@ for (yy in 0..<sizeY) for (xx in 0..<sizeX) {
-          if (image[y + yy][x + xx] != ExpectedImage[yy][xx].digitToInt().toByte()) {
+          val robots = this@matchesExpectedImage[x + xx xy y + yy] ?: emptyList()
+          val actualPixel = if (robots.isNotEmpty()) 1 else 0
+          if (actualPixel != ExpectedImage[yy][xx].digitToInt()) {
             match = false
             break@check
           }
@@ -60,21 +57,11 @@ private suspend fun List<Robot>.matchesExpectedImage(): Boolean {
 
 private fun List<Robot>.move(): List<Robot> = map { it.move() }
 
-private fun List<Robot>.draw(index: Int) {
-  val image = BufferedImage(MapSize.first, MapSize.second, BufferedImage.TYPE_INT_RGB)
-  val graphics = image.createGraphics()
-
-  graphics.color = Color.WHITE
-  graphics.fillRect(0, 0, MapSize.first, MapSize.second)
-
-  graphics.color = Color.BLACK
-  for (y in 0..<MapSize.second) for (x in 0..<MapSize.first) any { it.p == x to y }.let {
-    if (it) graphics.drawLine(x, y, x, y)
+private fun Robots.move(): Robots = buildMap<V2, MutableList<Robot>> {
+  for (group in this@move.values) for (robot in group) {
+    val moved = robot.move()
+    getOrPut(moved.p, ::mutableListOf).add(moved)
   }
-  graphics.dispose()
-
-  val outputFile = File("$index.png")
-  ImageIO.write(image, "png", outputFile)
 }
 
 private val MapSize = V2(101, 103)

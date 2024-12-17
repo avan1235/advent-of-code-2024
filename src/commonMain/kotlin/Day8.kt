@@ -19,6 +19,20 @@ data object Day8 : AdventDay() {
   }
 }
 
+private fun collectAntiNodes(
+  sizeX: Int,
+  sizeY: Int,
+  includeSelf: Boolean,
+  limit: Boolean,
+  start: V2,
+  next: V2,
+  antiNodes: MutableSet<V2>,
+) = generateSequence(start) { it + (start - next) }
+  .runIf(!includeSelf) { filter { it != start } }
+  .takeWhile { it.first in 0..<sizeX && it.second in 0..<sizeY }
+  .runIf(limit) { take(1) }
+  .forEach(antiNodes::add)
+
 private fun LazyDefaultMap<Char, MutableList<V2>>.countAntiNodes(
   sizeX: Int,
   sizeY: Int,
@@ -26,20 +40,10 @@ private fun LazyDefaultMap<Char, MutableList<V2>>.countAntiNodes(
   limit: Boolean,
 ): Int = let { antennas ->
   val antiNodes = mutableSetOf<V2>()
-  fun collectAntiNodes(start: V2, next: V2) = generateSequence(start) {
-    it + (start - next)
-  }
-    .runIf(!includeSelf) { filter { it != start } }
-    .takeWhile {
-      it.first in 0..<sizeX && it.second in 0..<sizeY
-    }
-    .runIf(limit) { take(1) }
-    .forEach(antiNodes::add)
-
   antennas.forEach { (_, group) ->
     for (i in 0..group.lastIndex - 1) for (j in i + 1..group.lastIndex) {
-      collectAntiNodes(group[i], group[j])
-      collectAntiNodes(group[j], group[i])
+      collectAntiNodes(sizeX, sizeY, includeSelf, limit, group[i], group[j], antiNodes)
+      collectAntiNodes(sizeX, sizeY, includeSelf, limit, group[j], group[i], antiNodes)
     }
   }
   antiNodes.size

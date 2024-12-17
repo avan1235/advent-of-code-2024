@@ -1,5 +1,5 @@
 import WeightedGraph.D
-import java.math.BigDecimal
+import com.ionspin.kotlin.bignum.integer.BigInteger
 
 data object Day16 : AdventDay() {
   override suspend fun solve() {
@@ -45,7 +45,7 @@ private class ReindeerMaze(
         e.context -> 1
         e.context.reversed -> 2001
         else -> 1001
-      }.let(::BigDecimal)
+      }.let(::BigInteger)
     },
     alterContext = { e, _ -> e.context },
   )
