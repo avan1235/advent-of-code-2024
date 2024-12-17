@@ -9,23 +9,35 @@ plugins {
 }
 
 kotlin {
-  jvm()
+  jvm {
+    mainRun {
+      mainClass = "AdventKt"
+    }
+  }
   listOf(
     macosArm64(),
     macosX64(),
     linuxArm64(),
     linuxX64(),
-  )
-  wasmJs {
-    browser()
+  ).forEach { target ->
+    target.binaries.executable {
+      entryPoint = "main"
+    }
   }
 
   sourceSets {
     commonMain.dependencies {
+      implementation(project(":solutions"))
+
       implementation(libs.kotlinx.coroutines.core)
       implementation(libs.kotlinx.datetime)
       implementation(libs.kotlinx.io.core)
       implementation(libs.kotlin.bignum)
+    }
+
+    commonTest.dependencies {
+      implementation(project(":solutions"))
+      implementation(libs.kotlin.test)
     }
   }
 }
