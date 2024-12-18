@@ -16,4 +16,5 @@ fun adventDays(): List<AdventDay> = listOf<AdventDay>(
     Day15,
     Day16,
     Day17,
+    Day18,
 )
