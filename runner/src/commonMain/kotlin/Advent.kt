@@ -15,7 +15,7 @@ fun main() = runBlocking(Dispatchers.Default) {
   }
   solved.forEach { (day, duration) ->
     println("--- Day ${day.n} ($duration)")
-    day.debug.forEach(::println)
+    day.debug.collect(::println)
   }
   println("Total time: $duration")
 }
