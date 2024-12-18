@@ -1,6 +1,5 @@
 data object Day12 : AdventDay() {
-  override suspend fun solve() {
-    val lines = reads<String>()
+  override suspend fun solve(lines: List<String>) {
     val m = Matrix2D(lines.map { it.toList() })
 
     val g = object : Graph<V2> {

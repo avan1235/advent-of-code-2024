@@ -1,8 +1,7 @@
 import kotlin.math.abs
 
 data object Day2 : AdventDay() {
-  override suspend fun solve() {
-    val lines = reads<String>()
+  override suspend fun solve(lines: List<String>) {
 
     val reports = lines.map { it.split(" ").map { string -> string.toLong() } }
 

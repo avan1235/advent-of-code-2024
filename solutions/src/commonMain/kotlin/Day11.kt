@@ -7,8 +7,8 @@ import kotlin.math.log10
 import kotlin.math.pow
 
 data object Day11 : AdventDay() {
-  override suspend fun solve() {
-    val line = reads<String>().single()
+  override suspend fun solve(lines: List<String>) {
+    val line = lines.single()
     val stones = line.split(" ").map { it.toLong() }
 
     naiveBlink(stones, count = 25).second.size.printIt()

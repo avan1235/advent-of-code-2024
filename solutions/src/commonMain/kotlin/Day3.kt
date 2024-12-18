@@ -1,6 +1,5 @@
 data object Day3 : AdventDay() {
-  override suspend fun solve() {
-    val lines = reads<String>()
+  override suspend fun solve(lines: List<String>) {
     val memory = lines.joinToString("")
 
     sumMulInstructions(memory).printIt()

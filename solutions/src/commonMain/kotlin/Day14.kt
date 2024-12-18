@@ -3,8 +3,7 @@ import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 
 data object Day14 : AdventDay() {
-  override suspend fun solve() {
-    val lines = reads<String>()
+  override suspend fun solve(lines: List<String>) {
     val robots = lines.map { it.toRobot() }
 
     val counts = longArrayOf(0, 0, 0, 0)

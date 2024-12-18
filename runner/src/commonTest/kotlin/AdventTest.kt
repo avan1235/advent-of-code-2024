@@ -5,7 +5,7 @@ import kotlin.test.assertEquals
 internal class AdventTest {
 
   private fun testAdventDay(day: AdventDay, part1: String, part2: String) = runBlocking<Unit>(Dispatchers.Default) {
-    val output = day.apply { solve() }.lines
+    val output = day.apply { solve(with = FileAdventInputReader) }.lines
     assertEquals(listOf(part1, part2), output, "${day::class.simpleName} output is not as expected")
   }
 

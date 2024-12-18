@@ -24,7 +24,7 @@ private suspend fun solveAdventDays(
   solve: (day: Int) -> Boolean = { true },
 ): List<Pair<AdventDay, Duration>> = coroutineScope {
   adventDays().mapIndexed { idx, day ->
-    if (solve(idx + 1)) async { day to measureTime { day.solve() } }
+    if (solve(idx + 1)) async { day to measureTime { day.solve(with = FileAdventInputReader) } }
     else CompletableDeferred(value = day to null)
   }.awaitAll()
 }.mapNotNull { (a, d) -> d?.let { a to d } }

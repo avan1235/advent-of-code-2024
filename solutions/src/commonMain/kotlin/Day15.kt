@@ -3,8 +3,7 @@ import WarehouseMap.Element.WALL
 import WideWarehouseMap.Element.*
 
 data object Day15 : AdventDay() {
-  override suspend fun solve() {
-    val lines = reads<String>()
+  override suspend fun solve(lines: List<String>) {
     val (rawMap, rawMoves) = lines.groupSeparatedBy(separator = { it == "" }, transform = { it })
 
     val moves = rawMoves.joinToString("")

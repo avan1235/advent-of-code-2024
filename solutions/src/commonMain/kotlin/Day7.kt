@@ -1,9 +1,7 @@
 import kotlin.math.pow
 
 data object Day7 : AdventDay() {
-  override suspend fun solve() {
-    val lines = reads<String>()
-
+  override suspend fun solve(lines: List<String>) {
     val equations = lines.map { lines ->
       lines.split(": ").let { (r, p) -> r.toLong() to p.split(" ").map(String::toLong) }
     }

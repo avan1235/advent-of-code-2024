@@ -2,8 +2,7 @@ import com.ionspin.kotlin.bignum.integer.BigInteger
 import com.ionspin.kotlin.bignum.integer.toBigInteger
 
 data object Day17 : AdventDay() {
-  override suspend fun solve() {
-    val lines = reads<String>()
+  override suspend fun solve(lines: List<String>) {
 
     val (rawRegisters, rawProgram) = lines.groupSeparatedBy(separator = { it == "" }, transform = { it })
     val registers = rawRegisters.associate {
