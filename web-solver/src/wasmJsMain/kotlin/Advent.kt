@@ -1,16 +1,22 @@
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Button
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.ComposeViewport
 import kotlinx.browser.document
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @OptIn(ExperimentalComposeUiApi::class)
 fun main() {
@@ -21,6 +27,7 @@ fun main() {
     val scope = rememberCoroutineScope()
     var part1 by remember { mutableStateOf<String?>(null) }
     var part2 by remember { mutableStateOf<String?>(null) }
+    var solving by remember { mutableStateOf(false) }
     Column(
       verticalArrangement = Arrangement.spacedBy(16.dp),
       modifier = Modifier
@@ -49,18 +56,36 @@ fun main() {
         modifier = Modifier.heightIn(max = 540.dp)
       )
 
-      Button(
-        onClick = {
-          val day = selectedDay
-          val input = input.trim()
-          scope.launch {
-            day.solve(input)
-            part1 = day.lines[0]
-            part2 = day.lines[1]
-          }
-        }
+      Row(
+        horizontalArrangement = Arrangement.spacedBy(16.dp),
+        verticalAlignment = Alignment.CenterVertically,
       ) {
-        Text("Solve")
+        Button(
+          onClick = {
+            solving = true
+            val day = selectedDay
+            val input = input.trim()
+            scope.launch {
+              try {
+                coroutineScope {
+                  withContext(Dispatchers.Default) {
+                    day.solve(input)
+                    part1 = day.lines[0]
+                    part2 = day.lines[1]
+                  }
+                }
+              } finally {
+                solving = false
+              }
+            }
+          },
+          enabled = !solving,
+        ) {
+          Text("Solve")
+        }
+        AnimatedVisibility(visible = solving) {
+          CircularProgressIndicator(Modifier.size(32.dp))
+        }
       }
 
       part1?.let {
