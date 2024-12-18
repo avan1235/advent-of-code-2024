@@ -39,7 +39,7 @@ private suspend fun Robots.matchesExpectedImage(): Boolean {
   val (sizeX, sizeY) = ExpectedImageSize
   return coroutineScope {
     buildList {
-      for (x in 0..<MapSize.first - sizeX) for (y in 0..<MapSize.second - sizeY) async {
+      for (x in 0..<MapSize.x - sizeX) for (y in 0..<MapSize.y - sizeY) async {
         var match = true
         check@ for (yy in 0..<sizeY) for (xx in 0..<sizeX) {
           val robots = this@matchesExpectedImage[x + xx xy y + yy] ?: emptyList()

@@ -57,7 +57,7 @@ private data class GuardMap(
       return GuardMap(guard, newDirection, obstacles, xSize, ySize)
     }
 
-    if (newGuard.first !in 0..<xSize || newGuard.second !in 0..<ySize) {
+    if (newGuard.x !in 0..<xSize || newGuard.y !in 0..<ySize) {
       return null
     }
     return GuardMap(newGuard, direction, obstacles, xSize, ySize)

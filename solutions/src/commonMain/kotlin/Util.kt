@@ -159,31 +159,31 @@ suspend fun <T> Iterable<T>.parallelFilter(selector: suspend (T) -> Boolean): Li
 suspend fun <T> Iterable<T>.parallelCount(selector: suspend (T) -> Boolean): Int =
   parallelMap { selector(it) }.count { it }
 
-data class V2(val first: Int, val second: Int)
+data class V2(val x: Int, val y: Int)
 
 infix fun Int.xy(i: Int): V2 = V2(this, i)
 
-operator fun V2.unaryMinus(): V2 = -first xy -second
+operator fun V2.unaryMinus(): V2 = -x xy -y
 
-operator fun V2.plus(other: V2): V2 = first + other.first xy second + other.second
+operator fun V2.plus(other: V2): V2 = x + other.x xy y + other.y
 
-operator fun V2.minus(other: V2): V2 = first - other.first xy second - other.second
+operator fun V2.minus(other: V2): V2 = x - other.x xy y - other.y
 
-operator fun V2.rem(v: Int): V2 = first % v xy second % v
+operator fun V2.rem(v: Int): V2 = x % v xy y % v
 
-operator fun V2.rem(v: V2): V2 = first % v.first xy second % v.second
+operator fun V2.rem(v: V2): V2 = x % v.x xy y % v.y
 
-fun V2.mod(v: Int): V2 = first.mod(v) xy second.mod(v)
+fun V2.mod(v: Int): V2 = x.mod(v) xy y.mod(v)
 
-fun V2.mod(v: V2): V2 = first.mod(v.first) xy second.mod(v.second)
+fun V2.mod(v: V2): V2 = x.mod(v.x) xy y.mod(v.y)
 
-operator fun Int.times(other: V2): V2 = other.first * this xy other.second * this
+operator fun Int.times(other: V2): V2 = other.x * this xy other.y * this
 
-val V2.length: Long get() = first.toLong() * first.toLong() + second.toLong() * second.toLong()
+val V2.length: Long get() = x.toLong() * x.toLong() + y.toLong() * y.toLong()
 
-val V2.abs: V2 get() = abs(first) xy abs(second)
+val V2.abs: V2 get() = abs(x) xy abs(y)
 
-val V2.normalized: V2 get() = first.sign * min(1, abs(first)) xy second.sign * min(1, abs(second))
+val V2.normalized: V2 get() = x.sign * min(1, abs(x)) xy y.sign * min(1, abs(y))
 
 fun Char.toMove(): V2 = when (this) {
   '>' -> 1 xy 0
@@ -197,7 +197,7 @@ fun <T> T.runIf(condition: Boolean, f: T.() -> T): T = if (condition) f() else t
 
 @JvmInline
 value class Matrix2D<T : Any>(val data: List<List<T>>) {
-  operator fun get(v: V2): T? = data.getOrNull(v.second)?.getOrNull(v.first)
+  operator fun get(v: V2): T? = data.getOrNull(v.y)?.getOrNull(v.x)
 }
 
 val List<String>.size2D: V2

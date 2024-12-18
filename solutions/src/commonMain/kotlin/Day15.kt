@@ -96,12 +96,12 @@ private data class WideWarehouseMap(
             putAll(elements)
             remove(nextRobot)
 
-            val sign = -move.first
+            val sign = -move.x
             generateSequence(firstFree) { it + sign * Dir.E.v }
-              .takeWhile { if (c == '<') it.first < nextRobot.first else it.first > nextRobot.first }
+              .takeWhile { if (c == '<') it.x < nextRobot.x else it.x > nextRobot.x }
               .forEach { put(it, if (c == '<') LBOX else RBOX) }
             generateSequence(firstFree + sign * Dir.E.v) { it + sign * 2 * Dir.E.v }
-              .takeWhile { if (c == '<') it.first < nextRobot.first else it.first > nextRobot.first }
+              .takeWhile { if (c == '<') it.x < nextRobot.x else it.x > nextRobot.x }
               .forEach { put(it, if (c == '<') RBOX else LBOX) }
           }
         )

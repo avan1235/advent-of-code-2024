@@ -29,7 +29,7 @@ private fun collectAntiNodes(
   antiNodes: MutableSet<V2>,
 ) = generateSequence(start) { it + (start - next) }
   .runIf(!includeSelf) { filter { it != start } }
-  .takeWhile { it.first in 0..<sizeX && it.second in 0..<sizeY }
+  .takeWhile { it.x in 0..<sizeX && it.y in 0..<sizeY }
   .runIf(limit) { take(1) }
   .forEach(antiNodes::add)
 
