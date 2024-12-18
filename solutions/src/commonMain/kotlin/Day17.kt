@@ -1,7 +1,7 @@
 import com.ionspin.kotlin.bignum.integer.BigInteger
 import com.ionspin.kotlin.bignum.integer.toBigInteger
 
-data object Day17 : AdventDay() {
+data object Day17 : AdventDay(n = 17) {
   override suspend fun solve(lines: List<String>) {
 
     val (rawRegisters, rawProgram) = lines.groupSeparatedBy(separator = { it == "" }, transform = { it })

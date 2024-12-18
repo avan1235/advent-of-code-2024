@@ -1,4 +1,4 @@
-data object Day12 : AdventDay() {
+data object Day12 : AdventDay(n = 12) {
   override suspend fun solve(lines: List<String>) {
     val m = Matrix2D(lines.map { it.toList() })
 

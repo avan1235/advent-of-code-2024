@@ -3,7 +3,7 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 
-data object Day6 : AdventDay() {
+data object Day6 : AdventDay(n = 6) {
   override suspend fun solve(lines: List<String>) {
     val map = lines.toGuardMap()
     generateSequence(map) { it.moveOnMap() }

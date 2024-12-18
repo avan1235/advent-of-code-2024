@@ -1,4 +1,4 @@
-data object Day10 : AdventDay() {
+data object Day10 : AdventDay(n = 10) {
   override suspend fun solve(lines: List<String>) {
     val map = lines.toTopographicMap()
 

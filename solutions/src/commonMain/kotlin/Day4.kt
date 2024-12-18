@@ -1,4 +1,4 @@
-data object Day4 : AdventDay() {
+data object Day4 : AdventDay(n = 4) {
   override suspend fun solve(lines: List<String>) {
     val map = lines.toMap()
 

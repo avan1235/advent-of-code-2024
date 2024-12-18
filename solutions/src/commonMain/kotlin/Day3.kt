@@ -1,4 +1,4 @@
-data object Day3 : AdventDay() {
+data object Day3 : AdventDay(n = 3) {
   override suspend fun solve(lines: List<String>) {
     val memory = lines.joinToString("")
 

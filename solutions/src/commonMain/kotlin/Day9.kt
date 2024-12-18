@@ -1,4 +1,4 @@
-data object Day9 : AdventDay() {
+data object Day9 : AdventDay(n = 9) {
   override suspend fun solve(lines: List<String>) {
     val line = lines.single()
 

@@ -14,7 +14,7 @@ fun main() = runBlocking(Dispatchers.Default) {
     )
   }
   solved.forEach { (day, duration) ->
-    println("--- ${day::class.simpleName} ($duration)")
+    println("--- Day ${day.n} ($duration)")
     day.lines.forEach(::println)
   }
   println("Total time: $duration")
@@ -23,8 +23,8 @@ fun main() = runBlocking(Dispatchers.Default) {
 private suspend fun solveAdventDays(
   solve: (day: Int) -> Boolean = { true },
 ): List<Pair<AdventDay, Duration>> = coroutineScope {
-  adventDays().mapIndexed { idx, day ->
-    if (solve(idx + 1)) async { day to measureTime { day.solve(with = FileAdventInputReader) } }
+  adventDays().map { day ->
+    if (solve(day.n)) async { day to measureTime { day.solve(with = FileAdventInputReader) } }
     else CompletableDeferred(value = day to null)
   }.awaitAll()
 }.mapNotNull { (a, d) -> d?.let { a to d } }

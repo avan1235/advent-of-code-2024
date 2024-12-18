@@ -1,4 +1,4 @@
-data object Day5 : AdventDay() {
+data object Day5 : AdventDay(n = 5) {
   override suspend fun solve(lines: List<String>) {
     val (rawRules, rawUpdates) = lines.groupSeparatedBy(separator = { it == "" }) { it }
 

@@ -1,7 +1,7 @@
 import WeightedGraph.E
 import com.ionspin.kotlin.bignum.integer.BigInteger
 
-data object Day18 : AdventDay() {
+data object Day18 : AdventDay(n = 18) {
   override suspend fun solve(lines: List<String>) {
     val positions = lines.map {
       BytePositionRegex.matchEntire(it)!!.groups.let { it["x"]!!.value.toInt() xy it["y"]!!.value.toInt() }

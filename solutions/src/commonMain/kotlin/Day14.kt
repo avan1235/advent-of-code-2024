@@ -2,7 +2,7 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 
-data object Day14 : AdventDay() {
+data object Day14 : AdventDay(n = 14) {
   override suspend fun solve(lines: List<String>) {
     val robots = lines.map { it.toRobot() }
 

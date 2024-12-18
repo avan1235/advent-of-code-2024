@@ -25,6 +25,7 @@ kotlin {
       implementation(libs.kotlinx.coroutines.core)
       implementation(libs.kotlinx.datetime)
       implementation(libs.kotlinx.io.core)
+      implementation(libs.kotlinx.collections.immutable)
       implementation(libs.kotlin.bignum)
     }
   }

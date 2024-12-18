@@ -1,6 +1,6 @@
 import kotlin.math.abs
 
-data object Day1 : AdventDay() {
+data object Day1 : AdventDay(n = 1) {
   override suspend fun solve(lines: List<String>) {
     val (fst, snd) = lines.map { line ->
       line.split(Regex("""\s+""")).let { (a, b) ->

@@ -1,4 +1,4 @@
-abstract class AdventDay {
+abstract class AdventDay(val n: Int) : Comparable<AdventDay> {
 
   private val _lines = mutableListOf<String>()
   val lines: List<String> get() = _lines
@@ -15,4 +15,7 @@ abstract class AdventDay {
   suspend fun solve(input: String) = solve(with = { input })
 
   fun <T> T.printIt(): T = also { _lines.add(it.toString()) }
+
+  override fun compareTo(other: AdventDay): Int =
+    n.compareTo(other.n)
 }
