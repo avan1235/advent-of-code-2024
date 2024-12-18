@@ -1,15 +1,19 @@
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Button
 import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
+import androidx.compose.material.TextFieldDefaults
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.ComposeViewport
 import kotlinx.browser.document
@@ -36,30 +40,24 @@ fun main() {
     ) {
       Spacer(Modifier.height(24.dp))
 
-      Dropdown(
-        preselected = selectedDay,
-        onOptionSelected = {
-          if (selectedDay != it) {
-            part1 = null
-            part2 = null
-            selectedDay = it
-          }
-        },
-        options = days,
-        representation = { "Day ${it.n}" },
-        modifier = Modifier.heightIn(max = 380.dp)
-      )
-
-      TextField(
-        value = input,
-        onValueChange = { input = it },
-        modifier = Modifier.heightIn(max = 540.dp)
-      )
-
       Row(
         horizontalArrangement = Arrangement.spacedBy(16.dp),
         verticalAlignment = Alignment.CenterVertically,
       ) {
+        Dropdown(
+          preselected = selectedDay,
+          onOptionSelected = {
+            if (selectedDay != it) {
+              part1 = null
+              part2 = null
+              selectedDay = it
+            }
+          },
+          options = days,
+          representation = { "Day ${it.n}" },
+          modifier = Modifier.heightIn(max = 380.dp)
+        )
+
         Button(
           onClick = {
             solving = true
@@ -87,6 +85,16 @@ fun main() {
           CircularProgressIndicator(Modifier.size(32.dp))
         }
       }
+
+      TextField(
+        value = input,
+        onValueChange = { input = it },
+        colors = TextFieldDefaults.textFieldColors(
+          backgroundColor = MaterialTheme.colors.surface,
+        ),
+        shape = RectangleShape,
+        modifier = Modifier.heightIn(max = 540.dp).fillMaxWidth()
+      )
 
       part1?.let {
         Text("Part 1: $it")
