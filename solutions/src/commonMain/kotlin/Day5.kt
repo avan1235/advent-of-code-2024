@@ -20,12 +20,12 @@ data object Day5 : AdventDay(n = 5) {
       }
     }
 
-    valid.sumOf { it[it.size / 2] }.printIt()
+    valid.sumOf { it[it.size / 2] }.part1()
 
     invalid.sumOf { update ->
       val relevantAfter = after.filter { it.key in update }
       val fixedUpdate = relevantAfter.topologicalSort().filter { it in update }
       fixedUpdate[fixedUpdate.size / 2]
-    }.printIt()
+    }.part2()
   }
 }

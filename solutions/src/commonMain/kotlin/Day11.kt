@@ -11,8 +11,8 @@ data object Day11 : AdventDay(n = 11) {
     val line = lines.single()
     val stones = line.split(" ").map { it.toLong() }
 
-    naiveBlink(stones, count = 25).second.size.printIt()
-    blink(stones, count = 75, cachedCount = 42).printIt()
+    naiveBlink(stones, count = 25).second.size.part1()
+    blink(stones, count = 75, cachedCount = 42).part2()
   }
 }
 

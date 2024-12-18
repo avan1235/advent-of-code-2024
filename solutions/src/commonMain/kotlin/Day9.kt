@@ -5,8 +5,8 @@ data object Day9 : AdventDay(n = 9) {
     val files = line.mapIndexedNotNull { idx, c -> if (idx % 2 == 0) c.digitToInt() else null }
     val free = line.mapIndexedNotNull { idx, c -> if (idx % 2 == 1) c.digitToInt() else null }
 
-    compactedChecksum(files, free).printIt()
-    compactedNoFragmentationChecksum(files, free).printIt()
+    compactedChecksum(files, free).part1()
+    compactedNoFragmentationChecksum(files, free).part2()
   }
 }
 

@@ -11,12 +11,12 @@ data object Day15 : AdventDay(n = 15) {
     moves.fold(rawMap.toWarehouseMap()) { acc, c -> acc.move(c) }
       .boxesCoordinates()
       .sumOf { (x, y) -> x + 100L * y }
-      .printIt()
+      .part1()
 
     moves.fold(rawMap.toWideWarehouseMap()) { acc, c -> acc.move(c) }
       .boxesCoordinates()
       .sumOf { (x, y) -> x + 100L * y }
-      .printIt()
+      .part2()
   }
 }
 

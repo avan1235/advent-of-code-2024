@@ -39,7 +39,7 @@ data object Day12 : AdventDay(n = 12) {
       region.sumOf { node ->
         4 - g.neighbours(node).count()
       }.let { perimeter -> perimeter * region.size }
-    }.printIt()
+    }.part1()
 
 
     val directions = Dir.entries.map(Dir::v).repeat(count = 2).zipWithNext().take(n = 4)
@@ -52,6 +52,6 @@ data object Day12 : AdventDay(n = 12) {
           ) 1L else 0L
         }
       }.let { sides -> sides * region.size }
-    }.printIt()
+    }.part2()
   }
 }

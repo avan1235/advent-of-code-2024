@@ -6,7 +6,7 @@ data object Day16 : AdventDay(n = 16) {
 
     val maze = lines.toReindeerMaze()
     val shortestPath = maze.shortestPath(startDirection = Dir.E)
-    shortestPath.value.printIt()
+    shortestPath.value.part1()
 
     maze.nodes.parallelCount { node ->
       when (node) {
@@ -18,7 +18,7 @@ data object Day16 : AdventDay(n = 16) {
           p1.value + p2.value == shortestPath.value
         }
       }
-    }.printIt()
+    }.part2()
   }
 }
 

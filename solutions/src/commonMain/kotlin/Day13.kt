@@ -3,8 +3,8 @@ import com.ionspin.kotlin.bignum.integer.toBigInteger
 
 data object Day13 : AdventDay(n = 13) {
   override suspend fun solve(lines: List<String>) {
-    lines.countTokens().printIt()
-    lines.countTokens { it + 10000000000000L.toBigInteger() }.printIt()
+    lines.countTokens().part1()
+    lines.countTokens { it + 10000000000000L.toBigInteger() }.part2()
   }
 }
 

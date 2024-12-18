@@ -12,9 +12,9 @@ data object Day17 : AdventDay(n = 17) {
       ProgramRegex.matchEntire(it)!!.groups["instructions"]!!.value.split(",").map(String::toInt)
     }
 
-    runProgram(program, registers).joinToString(",").printIt()
+    runProgram(program, registers).joinToString(",").part1()
 
-    backtrack(program, BigInteger.ZERO, 1).printIt()
+    backtrack(program, BigInteger.ZERO, 1).part2()
   }
 }
 

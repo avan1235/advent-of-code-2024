@@ -12,7 +12,7 @@ data object Day7 : AdventDay(n = 7) {
         1 -> result * element
         else -> error("unexpected bit: $bit")
       }
-    }.printIt()
+    }.part1()
 
     equations.fold(radix = 3) { result, element, bit ->
       when (bit) {
@@ -21,7 +21,7 @@ data object Day7 : AdventDay(n = 7) {
         2 -> "$result$element".toLong()
         else -> error("unexpected bit: $bit")
       }
-    }.printIt()
+    }.part2()
   }
 }
 

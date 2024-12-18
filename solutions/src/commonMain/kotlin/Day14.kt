@@ -17,13 +17,13 @@ data object Day14 : AdventDay(n = 14) {
         x > mx / 2 && y > my / 2 -> counts[3]++
       }
     }
-    counts.fold(1L) { acc, v -> acc * v }.printIt()
+    counts.fold(1L) { acc, v -> acc * v }.part1()
 
     var curr = robots.groupBy { it.p }
     var idx = 0
     find@ while (true) {
       if (curr.matchesExpectedImage()) {
-        idx.printIt()
+        idx.part2()
         break@find
       }
       curr = curr.move()

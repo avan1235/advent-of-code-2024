@@ -7,13 +7,13 @@ data object Day8 : AdventDay(n = 8) {
       sizeX, sizeY,
       includeSelf = false,
       limit = true
-    ).printIt()
+    ).part1()
 
     antennas.countAntiNodes(
       sizeX, sizeY,
       includeSelf = true,
       limit = false
-    ).printIt()
+    ).part2()
   }
 }
 

@@ -10,7 +10,7 @@ data object Day6 : AdventDay(n = 6) {
       .map { it.guard }
       .distinct()
       .count()
-      .printIt()
+      .part1()
 
     coroutineScope {
       buildList {
@@ -23,7 +23,7 @@ data object Day6 : AdventDay(n = 6) {
           newMap.isLooping
         }.let { add(it) }
       }.awaitAll()
-    }.count { it }.printIt()
+    }.count { it }.part2()
   }
 }
 

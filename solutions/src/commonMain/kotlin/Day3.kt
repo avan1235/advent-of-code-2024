@@ -2,9 +2,9 @@ data object Day3 : AdventDay(n = 3) {
   override suspend fun solve(lines: List<String>) {
     val memory = lines.joinToString("")
 
-    sumMulInstructions(memory).printIt()
+    sumMulInstructions(memory).part1()
 
-    findDoRanges(memory).sumOf { sumMulInstructions(memory.substring(it)) }.printIt()
+    findDoRanges(memory).sumOf { sumMulInstructions(memory.substring(it)) }.part2()
   }
 }
 

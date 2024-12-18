@@ -5,11 +5,11 @@ data object Day2 : AdventDay(n = 2) {
 
     val reports = lines.map { it.split(" ").map { string -> string.toLong() } }
 
-    reports.count(::isReportValid).printIt()
+    reports.count(::isReportValid).part1()
 
     reports.count { report ->
       isReportValid(report) || report.withEachElementRemoved().any(::isReportValid)
-    }.printIt()
+    }.part2()
   }
 }
 

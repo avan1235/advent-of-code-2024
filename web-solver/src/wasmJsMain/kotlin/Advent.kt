@@ -29,8 +29,7 @@ fun main() {
     val days = remember { Advent2024.days }
     var selectedDay by remember { mutableStateOf(days.first()) }
     val scope = rememberCoroutineScope()
-    var part1 by remember { mutableStateOf<String?>(null) }
-    var part2 by remember { mutableStateOf<String?>(null) }
+    var solution by remember { mutableStateOf<String?>(null) }
     var solving by remember { mutableStateOf(false) }
     Column(
       verticalArrangement = Arrangement.spacedBy(16.dp),
@@ -48,8 +47,7 @@ fun main() {
           preselected = selectedDay,
           onOptionSelected = {
             if (selectedDay != it) {
-              part1 = null
-              part2 = null
+              solution = null
               selectedDay = it
             }
           },
@@ -68,8 +66,7 @@ fun main() {
                 coroutineScope {
                   withContext(Dispatchers.Default) {
                     day.solve(input)
-                    part1 = day.lines[0]
-                    part2 = day.lines[1]
+                    solution = "Part 1: ${day.part1}\nPart 2: ${day.part2}"
                   }
                 }
               } finally {
@@ -96,12 +93,8 @@ fun main() {
         modifier = Modifier.heightIn(max = 540.dp).fillMaxWidth()
       )
 
-      part1?.let {
-        Text("Part 1: $it")
-      }
-
-      part2?.let {
-        Text("Part 2: $it")
+      solution?.let {
+        Text(it)
       }
 
       Spacer(Modifier.height(24.dp))

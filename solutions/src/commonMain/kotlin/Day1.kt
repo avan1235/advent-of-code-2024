@@ -8,9 +8,9 @@ data object Day1 : AdventDay(n = 1) {
       }
     }.transpose()
 
-    fst.sorted().zip(snd.sorted()).sumOf { (a, b) -> abs(a - b) }.printIt()
+    fst.sorted().zip(snd.sorted()).sumOf { (a, b) -> abs(a - b) }.part1()
 
     val sndEachCount = snd.groupingBy { it }.eachCount().toDefaultMap(0)
-    fst.sumOf { sndEachCount[it] * it }.printIt()
+    fst.sumOf { sndEachCount[it] * it }.part2()
   }
 }

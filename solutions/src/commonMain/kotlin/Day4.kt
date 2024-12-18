@@ -2,8 +2,8 @@ data object Day4 : AdventDay(n = 4) {
   override suspend fun solve(lines: List<String>) {
     val map = lines.toMap()
 
-    map.countXmas().printIt()
-    map.countXMAS().printIt()
+    map.countXmas().part1()
+    map.countXMAS().part2()
   }
 }
 

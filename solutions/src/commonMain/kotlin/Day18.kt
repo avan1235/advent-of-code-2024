@@ -7,11 +7,11 @@ data object Day18 : AdventDay(n = 18) {
       BytePositionRegex.matchEntire(it)!!.groups.let { it["x"]!!.value.toInt() xy it["y"]!!.value.toInt() }
     }
 
-    positions.shortestPath(n = 1024).printIt()
+    positions.shortestPath(n = 1024).part1()
 
     for (n in positions.indices) {
       if (positions.shortestPath(n + 1) != WeightedGraph.INFINITY) continue
-      positions[n].let { (x, y) -> "$x,$y" }.printIt()
+      positions[n].let { (x, y) -> "$x,$y" }.part2()
       break
     }
   }
