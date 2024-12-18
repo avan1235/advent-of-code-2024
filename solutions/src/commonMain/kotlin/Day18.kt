@@ -11,7 +11,7 @@ data object Day18 : AdventDay() {
     positions.shortestPath(n = 1024).printIt()
 
     for (n in positions.indices) {
-      if (positions.shortestPath(n + 1) != BigInteger.fromLong(Long.MAX_VALUE)) continue
+      if (positions.shortestPath(n + 1) != WeightedGraph.INFINITY) continue
       positions[n].let { (x, y) -> "$x,$y" }.printIt()
       break
     }

@@ -351,7 +351,7 @@ class WeightedGraph<N, ECtx>(
     val queue = PriorityQueue<QN<N, DC>>(adj.keys.size, compareBy(selector = { it.distance.value }))
 
     adj.keys.forEach { v ->
-      if (v != source) dist[v] = D(BigInteger.fromLong(Long.MAX_VALUE), maxDistanceContext)
+      if (v != source) dist[v] = D(INFINITY, maxDistanceContext)
       queue.add(if (v != source) QN(v, dist[v]) else QN(source, D(BigInteger.ZERO, startDistanceContext)))
     }
 
@@ -382,13 +382,17 @@ class WeightedGraph<N, ECtx>(
     cost: (from: QN<N, DC>, to: E<N, ECtx>) -> BigInteger,
     alterContext: (to: E<N, ECtx>, altDistance: BigInteger) -> DC,
   ): D<DC> = shortestPaths(
-    source,
-    startDistanceContext,
-    zeroDistanceContext,
-    maxDistanceContext,
-    cost,
-    alterContext
+    source = source,
+    startDistanceContext = startDistanceContext,
+    zeroDistanceContext = zeroDistanceContext,
+    maxDistanceContext = maxDistanceContext,
+    cost = cost,
+    alterContext = alterContext
   )[destination]
+
+  companion object {
+    val INFINITY: BigInteger by lazy { BigInteger.fromLong(Long.MAX_VALUE) * BigInteger.fromLong(Long.MAX_VALUE) }
+  }
 }
 
 enum class Dir(val v: V2) {
