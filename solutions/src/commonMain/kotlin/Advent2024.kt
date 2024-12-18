@@ -1,4 +1,5 @@
-fun adventDays(): List<AdventDay> = listOf<AdventDay>(
+data object Advent2024 : Advent {
+  override val days = listOf<AdventDay>(
     Day1,
     Day2,
     Day3,
@@ -17,4 +18,5 @@ fun adventDays(): List<AdventDay> = listOf<AdventDay>(
     Day16,
     Day17,
     Day18,
-)
+  )
+}

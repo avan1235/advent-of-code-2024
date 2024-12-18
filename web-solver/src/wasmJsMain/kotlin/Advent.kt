@@ -16,7 +16,7 @@ import kotlinx.coroutines.launch
 fun main() {
   ComposeViewport(document.body!!) {
     var input by remember { mutableStateOf("") }
-    val days = remember { adventDays() }
+    val days = remember { Advent2024.days }
     var selectedDay by remember { mutableStateOf(days.first()) }
     val scope = rememberCoroutineScope()
     var part1 by remember { mutableStateOf<String?>(null) }

@@ -9,7 +9,7 @@ import kotlin.time.measureTimedValue
 fun main() = runBlocking(Dispatchers.Default) {
   val now = Clock.System.now().toLocalDateTime(TimeZone.of("UTC-5"))
   val (solved, duration) = measureTimedValue {
-    solveAdventDays(
+    Advent2024.solve(
       solve = { day -> now.run { monthNumber != 12 || dayOfMonth > 25 || dayOfMonth == day } }
     )
   }
@@ -20,10 +20,10 @@ fun main() = runBlocking(Dispatchers.Default) {
   println("Total time: $duration")
 }
 
-private suspend fun solveAdventDays(
+private suspend fun Advent.solve(
   solve: (day: Int) -> Boolean = { true },
 ): List<Pair<AdventDay, Duration>> = coroutineScope {
-  adventDays().map { day ->
+  days.map { day ->
     if (solve(day.n)) async { day to measureTime { day.solve(with = FileAdventInputReader) } }
     else CompletableDeferred(value = day to null)
   }.awaitAll()
