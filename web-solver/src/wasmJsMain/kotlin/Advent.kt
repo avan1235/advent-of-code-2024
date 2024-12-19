@@ -68,8 +68,8 @@ fun main() {
               try {
                 coroutineScope {
                   withContext(Dispatchers.Default) {
-                    day.solve(input)
-                    solution = "Part 1: ${day.part1}\nPart 2: ${day.part2}"
+                    val daySolution = day.solve(input)
+                    solution = "Part 1: ${daySolution.part1}\nPart 2: ${daySolution.part2}"
                   }
                 }
               } catch (e: SolveContext.Exception) {

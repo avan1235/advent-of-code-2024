@@ -1,30 +1,41 @@
+import AdventDay.SolveContext
 import kotlinx.coroutines.*
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.consumeAsFlow
 import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
-import kotlin.time.Duration
 import kotlin.time.measureTime
-import kotlin.time.measureTimedValue
 
 fun main() = runBlocking(Dispatchers.Default) {
   val now = Clock.System.now().toLocalDateTime(TimeZone.of("UTC-5"))
-  val (solved, duration) = measureTimedValue {
-    Advent2024.solve(
-      solve = { day -> now.run { monthNumber != 12 || dayOfMonth > 25 || dayOfMonth == day } }
-    )
+  val debug = Channel<String>(capacity = Channel.UNLIMITED)
+  try {
+    launch { debug.consumeAsFlow().collect(::println) }
+    val duration = measureTime {
+      Advent2024.solve(
+        debug = debug,
+        solve = { day -> now.run { monthNumber != 12 || dayOfMonth > 25 || dayOfMonth == day } },
+      )
+    }
+    debug.send("Total time: $duration")
+  } finally {
+    debug.close()
   }
-  solved.forEach { (day, duration) ->
-    println("--- Day ${day.n} ($duration)")
-    day.debug.collect(::println)
-  }
-  println("Total time: $duration")
 }
 
 private suspend fun Advent.solve(
+  debug: Channel<String>,
   solve: (day: Int) -> Boolean = { true },
-): List<Pair<AdventDay, Duration>> = coroutineScope {
+): Unit = supervisorScope {
   days.map { day ->
-    if (solve(day.n)) async { day to measureTime { day.solve(with = FileAdventInputReader) } }
-    else CompletableDeferred(value = day to null)
-  }.awaitAll()
-}.mapNotNull { (a, d) -> d?.let { a to d } }
+    if (solve(day.n)) launch {
+      val dayDebug = Channel<String>(capacity = Channel.UNLIMITED)
+      launch { dayDebug.consumeAsFlow().collect(debug::send) }
+      SolveContext(dayDebug).use { context ->
+        val duration = measureTime { with(day) { context.solve(with = FileAdventInputReader) } }
+        dayDebug.send("--- Day ${day.n} finished ($duration)")
+      }
+    } else Job().apply { complete() }
+  }.joinAll()
+}

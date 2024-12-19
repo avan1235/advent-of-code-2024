@@ -1,5 +1,5 @@
 data object Day9 : AdventDay(n = 9) {
-  override suspend fun solve(lines: List<String>) {
+  override suspend fun SolveContext.solve(lines: List<String>) {
     val line = lines.single()
 
     val files = line.mapIndexedNotNull { idx, c -> if (idx % 2 == 0) c.digitToInt() else null }

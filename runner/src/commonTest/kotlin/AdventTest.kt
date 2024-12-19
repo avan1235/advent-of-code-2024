@@ -5,9 +5,9 @@ import kotlin.test.assertEquals
 internal class AdventTest {
 
   private fun testAdventDay(day: AdventDay, part1: String, part2: String) = runBlocking<Unit>(Dispatchers.Default) {
-    day.solve(with = FileAdventInputReader)
-    assertEquals(part1, day.part1, "Day ${day.n} part 1 output is not as expected")
-    assertEquals(part2, day.part2, "Day ${day.n} part 2 output is not as expected")
+    val solution = day.solve(with = FileAdventInputReader)
+    assertEquals(part1, solution.part1, "Day ${day.n} part 1 output is not as expected")
+    assertEquals(part2, solution.part2, "Day ${day.n} part 2 output is not as expected")
   }
 
   @Test fun testDay1() = testAdventDay(Day1, "2904518", "18650129")

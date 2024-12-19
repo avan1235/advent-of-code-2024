@@ -1,5 +1,5 @@
 data object Day10 : AdventDay(n = 10) {
-  override suspend fun solve(lines: List<String>) {
+  override suspend fun SolveContext.solve(lines: List<String>) {
     val map = lines.toTopographicMap()
 
     map.sum(checkIfVisited = true).part1()

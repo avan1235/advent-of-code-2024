@@ -7,7 +7,7 @@ import kotlin.math.log10
 import kotlin.math.pow
 
 data object Day11 : AdventDay(n = 11) {
-  override suspend fun solve(lines: List<String>) {
+  override suspend fun SolveContext.solve(lines: List<String>) {
     val line = lines.single()
     val stones = line.split(" ").map { it.toLong() }
 

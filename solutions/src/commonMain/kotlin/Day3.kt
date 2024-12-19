@@ -1,5 +1,5 @@
 data object Day3 : AdventDay(n = 3) {
-  override suspend fun solve(lines: List<String>) {
+  override suspend fun SolveContext.solve(lines: List<String>) {
     val memory = lines.joinToString("")
 
     sumMulInstructions(memory).part1()

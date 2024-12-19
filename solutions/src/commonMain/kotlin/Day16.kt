@@ -2,7 +2,7 @@ import WeightedGraph.D
 import com.ionspin.kotlin.bignum.integer.BigInteger
 
 data object Day16 : AdventDay(n = 16) {
-  override suspend fun solve(lines: List<String>) {
+  override suspend fun SolveContext.solve(lines: List<String>) {
 
     val maze = lines.toReindeerMaze()
     val shortestPath = maze.shortestPath(startDirection = Dir.E)

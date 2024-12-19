@@ -1,5 +1,5 @@
 data object Day8 : AdventDay(n = 8) {
-  override suspend fun solve(lines: List<String>) {
+  override suspend fun SolveContext.solve(lines: List<String>) {
     val antennas = lines.toAntennas()
     val (sizeX, sizeY) = lines.size2D
 

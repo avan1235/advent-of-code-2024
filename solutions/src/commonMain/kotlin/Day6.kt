@@ -4,7 +4,7 @@ import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 
 data object Day6 : AdventDay(n = 6) {
-  override suspend fun solve(lines: List<String>) {
+  override suspend fun SolveContext.solve(lines: List<String>) {
     val map = lines.toGuardMap()
     generateSequence(map) { it.moveOnMap() }
       .map { it.guard }
