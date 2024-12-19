@@ -225,6 +225,9 @@ tailrec fun gcd(a: BigInteger, b: BigInteger): BigInteger =
 fun lcm(a: BigInteger, b: BigInteger): BigInteger =
   a / gcd(a, b) * b
 
+fun Iterable<BigInteger>.sum(): BigInteger =
+  fold(BigInteger.ZERO) { acc, i -> acc + i }
+
 inline fun <T, R> Iterable<T>.map2Set(
   destination: MutableSet<R> = LinkedHashSet(),
   transform: (T) -> R,
@@ -402,4 +405,51 @@ enum class Dir(val v: V2) {
     get() = when (this) {
       N -> S; E -> W; S -> N; W -> E
     }
+}
+
+interface CharSequenceTrie {
+
+  operator fun contains(word: CharSequence): Boolean
+}
+
+class MutableCharSequenceTrie private constructor() : CharSequenceTrie {
+
+  private class Node {
+    var hasValue: Boolean = false
+
+    private val children: MutableMap<Int, Node> = HashMap()
+
+    operator fun plus(key: Char): Node {
+      val code = key.code
+      return when (val child = children[code]) {
+        null -> Node().also { children.put(code, it) }
+        else -> child
+      }
+    }
+
+    operator fun get(key: Char): Node? = children[key.code]
+  }
+
+  private val root: Node = Node()
+
+  operator fun plusAssign(element: CharSequence) {
+    if (element.isEmpty()) {
+      root.hasValue = true
+      return
+    }
+    element.foldIndexed(root) { idx, currNode, c ->
+      (currNode + c).also { if (idx == element.lastIndex) it.hasValue = true }
+    }
+  }
+
+  override operator fun contains(word: CharSequence): Boolean =
+    word.fold(root) { currNode, c -> currNode[c] ?: return false }.hasValue
+
+  companion object {
+    private inline fun buildMutableCharSequenceTrie(action: MutableCharSequenceTrie.() -> Unit = {}): MutableCharSequenceTrie =
+      MutableCharSequenceTrie().apply(action)
+
+    fun charSequenceTrieOf(vararg elements: CharSequence): CharSequenceTrie =
+      buildMutableCharSequenceTrie { elements.forEach { this += it } }
+  }
 }
