@@ -32,7 +32,7 @@ private suspend fun Advent.solve(
     if (solve(day.n)) launch {
       val dayDebug = Channel<String>(capacity = Channel.UNLIMITED)
       launch { dayDebug.consumeAsFlow().collect(debug::send) }
-      SolveContext(dayDebug).use { context ->
+      day.SolveContext(dayDebug).use { context ->
         val duration = measureTime { with(day) { context.solve(with = FileAdventInputReader) } }
         dayDebug.send("--- Day ${day.n} finished ($duration)")
       }

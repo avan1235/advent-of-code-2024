@@ -1,15 +1,8 @@
-import AdventDay.SolveContext
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.Button
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
-import androidx.compose.material.TextField
-import androidx.compose.material.TextFieldDefaults
+import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -72,7 +65,7 @@ fun main() {
                     solution = "Part 1: ${daySolution.part1}\nPart 2: ${daySolution.part2}"
                   }
                 }
-              } catch (e: SolveContext.Exception) {
+              } catch (e: AdventDay.Exception) {
                 errorMessage = e.message
               } catch (e: Exception) {
                 errorMessage = e.stackTraceToString()
