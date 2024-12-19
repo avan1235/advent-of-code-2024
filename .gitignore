@@ -2,3 +2,6 @@
 /.gradle/
 /.idea/
 /.kotlin/
+.DS_Store
+kotlin-js-store
+yarn.lock
