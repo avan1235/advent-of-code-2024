@@ -1,6 +1,5 @@
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.Channel.Factory.UNLIMITED
-import kotlinx.coroutines.channels.ReceiveChannel
 
 abstract class AdventDay(val n: Int) : Comparable<AdventDay> {
 
@@ -30,9 +29,8 @@ abstract class AdventDay(val n: Int) : Comparable<AdventDay> {
 
   @Suppress("CONTEXT_RECEIVERS_DEPRECATED")
   inner class SolveContext(
-    private val _debug: Channel<String> = Channel(capacity = UNLIMITED)
+    private val debug: Channel<String> = Channel(capacity = UNLIMITED)
   ) : AutoCloseable {
-    val debug: ReceiveChannel<String> get() = _debug
 
     var part1: String? = null
       private set
@@ -40,10 +38,10 @@ abstract class AdventDay(val n: Int) : Comparable<AdventDay> {
       private set
 
     override fun close() {
-      _debug.close()
+      debug.close()
     }
 
-    suspend fun <T> T.printIt(): T = also { _debug.send(toString()) }
+    suspend fun <T> T.printIt(): T = also { debug.send(toString()) }
 
     suspend fun <T> T.part1(): T = also {
       val solution = toString()

@@ -16,7 +16,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.ComposeViewport
 import kotlinx.browser.document
 import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.consumeAsFlow
+import kotlinx.coroutines.channels.Channel
 
 @OptIn(ExperimentalComposeUiApi::class)
 fun main() {
@@ -90,15 +90,15 @@ fun main() {
               runningJob = scope.launch(Dispatchers.Default) {
                 try {
                   coroutineScope {
-                    val context = day.SolveContext()
+                    val debug = Channel<String>()
                     launch {
-                      context.debug.consumeAsFlow().collect {
-                        log = log.appendLine(it)
+                      for (line in debug) {
+                        log = log.appendLine(line)
                       }
                     }
-                    launch {
+                    day.SolveContext(debug).use { context ->
                       with(day) { context.solve(input) }.run {
-                        solution = "Part 1: ${part1}\nPart 2: ${part2}"
+                        solution = "Part 1: ${part1}\nPart 2: $part2"
                       }
                     }
                   }
@@ -108,9 +108,9 @@ fun main() {
                   throw e
                 } catch (e: Exception) {
                   errorMessage = e.stackTraceToString()
+                } finally {
+                  runningJob = null
                 }
-              }.apply {
-                invokeOnCompletion { runningJob = null }
               }
             },
             enabled = runningJob == null,

@@ -9,7 +9,7 @@ import kotlin.time.measureTime
 
 fun main() = runBlocking(Dispatchers.Default) {
   val now = Clock.System.now().toLocalDateTime(TimeZone.of("UTC-5"))
-  val debug = Channel<String>(capacity = Channel.UNLIMITED)
+  val debug = Channel<String>()
   try {
     launch { debug.consumeAsFlow().collect(::println) }
     val duration = measureTime {
@@ -30,7 +30,7 @@ private suspend fun Advent.solve(
 ): Unit = supervisorScope {
   days.map { day ->
     if (solve(day.n)) launch {
-      val dayDebug = Channel<String>(capacity = Channel.UNLIMITED)
+      val dayDebug = Channel<String>()
       launch { dayDebug.consumeAsFlow().collect(debug::send) }
       day.SolveContext(dayDebug).use { context ->
         val duration = measureTime { with(day) { context.solve(with = FileAdventInputReader) } }
