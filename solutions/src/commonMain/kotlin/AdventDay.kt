@@ -23,7 +23,6 @@ abstract class AdventDay(val n: Int) : Comparable<AdventDay> {
   override fun compareTo(other: AdventDay): Int =
     n.compareTo(other.n)
 
-
   class Exception(override val message: String) : kotlin.Exception(message)
 
   data class Solution(val part1: String, val part2: String)
