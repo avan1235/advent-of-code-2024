@@ -1,3 +1,4 @@
+import AdventDay.SolveContext
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -71,6 +72,8 @@ fun main() {
                     solution = "Part 1: ${day.part1}\nPart 2: ${day.part2}"
                   }
                 }
+              } catch (e: SolveContext.Exception) {
+                errorMessage = e.message
               } catch (e: Exception) {
                 errorMessage = e.stackTraceToString()
               } finally {

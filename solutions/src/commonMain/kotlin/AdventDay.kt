@@ -28,10 +28,17 @@ abstract class AdventDay(val n: Int) : Comparable<AdventDay> {
 
   fun <T> T.printIt(): T = also { _debug.trySend(toString()) }
 
+  fun <T : Any> T?.notNull(message: String): T =
+    this ?: throw SolveContext.Exception(message)
+
   fun <T> T.part1(): T = also { part1 = toString().printIt() }
 
   fun <T> T.part2(): T = also { part2 = toString().printIt() }
 
   override fun compareTo(other: AdventDay): Int =
     n.compareTo(other.n)
+
+  class SolveContext {
+    class Exception(override val message: String) : kotlin.Exception(message)
+  }
 }
