@@ -29,10 +29,6 @@ kotlin {
       implementation(libs.kotlin.bignum)
     }
   }
-
-  compilerOptions {
-    freeCompilerArgs.add("-Xcontext-receivers")
-  }
 }
 
 tasks.withType<Test> {
