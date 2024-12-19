@@ -13,6 +13,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.ComposeViewport
@@ -30,6 +31,7 @@ fun main() {
     var selectedDay by remember { mutableStateOf(days.first()) }
     val scope = rememberCoroutineScope()
     var solution by remember { mutableStateOf<String?>(null) }
+    var errorMessage by remember { mutableStateOf<String?>(null) }
     var solving by remember { mutableStateOf(false) }
     Column(
       verticalArrangement = Arrangement.spacedBy(16.dp),
@@ -60,7 +62,7 @@ fun main() {
           onClick = {
             solving = true
             val day = selectedDay
-            val input = input.trim()
+            val input = input
             scope.launch {
               try {
                 coroutineScope {
@@ -69,6 +71,8 @@ fun main() {
                     solution = "Part 1: ${day.part1}\nPart 2: ${day.part2}"
                   }
                 }
+              } catch (e: Exception) {
+                errorMessage = e.stackTraceToString()
               } finally {
                 solving = false
               }
@@ -95,6 +99,9 @@ fun main() {
 
       solution?.let {
         Text(it)
+      }
+      errorMessage?.let {
+        Text(it, color = Color.Red)
       }
 
       Spacer(Modifier.height(24.dp))
