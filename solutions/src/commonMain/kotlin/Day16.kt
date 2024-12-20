@@ -65,7 +65,7 @@ private fun List<String>.toReindeerMaze(): ReindeerMaze {
 
       Dir.entries.forEach {
         val n = c + it.v
-        if (matrix[n] != '#') getOrPut(c) { mutableListOf() }.add(WeightedGraph.E(n, it))
+        if (matrix[n] != '#') getOrPut(c, ::mutableSetOf).add(WeightedGraph.E(n, it))
       }
     }
   }

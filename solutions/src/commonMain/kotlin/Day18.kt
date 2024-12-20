@@ -21,22 +21,17 @@ private fun List<V2>.shortestPath(n: Int): BigInteger =
   take(n)
     .toSet<V2>()
     .toWeightedGraph()
-    .shortestPath<Unit>(
+    .shortestPath(
       source = 0 xy 0,
       destination = Size.x - 1 xy Size.y - 1,
-      startDistanceContext = Unit,
-      zeroDistanceContext = Unit,
-      maxDistanceContext = Unit,
-      cost = { qn, e -> BigInteger.ONE },
-      alterContext = { _, _ -> }
-    ).value
+    )
 
 private val Size = 71 xy 71
 
 private fun Set<V2>.toWeightedGraph(): WeightedGraph<V2, Unit> {
   val (sizeX, sizeY) = Size
 
-  val map = LazyDefaultMap<V2, MutableList<E<V2, Unit>>>(::mutableListOf)
+  val map = LazyDefaultMap<V2, MutableSet<E<V2, Unit>>>(::mutableSetOf)
   val ys = 0..<sizeY
   val xs = 0..<sizeX
   for (y in ys) for (x in xs) {

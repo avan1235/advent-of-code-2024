@@ -33,8 +33,7 @@ fun <U, V> List<U>.groupSeparatedBy(
 }.toList()
 
 fun <T> List<List<T>>.transpose(): List<List<T>> {
-  val n = map { it.size }.toSet().singleOrNull()
-    ?: throw IllegalArgumentException("Invalid data to transpose: $this")
+  val n = map { it.size }.toSet().singleOrNull() ?: throw AdventDay.Exception("Invalid data to transpose: $this")
   return List(n) { y -> List(size) { x -> this[x][y] } }
 }
 
@@ -159,7 +158,9 @@ suspend fun <T> Iterable<T>.parallelFilter(selector: suspend (T) -> Boolean): Li
 suspend fun <T> Iterable<T>.parallelCount(selector: suspend (T) -> Boolean): Int =
   parallelMap { selector(it) }.count { it }
 
-data class V2(val x: Int, val y: Int)
+data class V2(val x: Int, val y: Int) {
+  override fun toString() = "($x,$y)"
+}
 
 infix fun Int.xy(i: Int): V2 = V2(this, i)
 
@@ -197,6 +198,13 @@ fun <T> T.runIf(condition: Boolean, f: T.() -> T): T = if (condition) f() else t
 
 @JvmInline
 value class Matrix2D<T : Any>(val data: List<List<T>>) {
+  val size2D: V2
+    get() {
+      val sizeX = data.map2Set { it.size }.single()
+      val sizeY = data.size
+      return sizeX xy sizeY
+    }
+
   operator fun get(v: V2): T? = data.getOrNull(v.y)?.getOrNull(v.x)
 }
 
@@ -207,32 +215,24 @@ val List<String>.size2D: V2
     return sizeX xy sizeY
   }
 
-tailrec fun gcd(a: Long, b: Long): Long =
-  if (b == 0L) a else gcd(b, a % b)
+tailrec fun gcd(a: Long, b: Long): Long = if (b == 0L) a else gcd(b, a % b)
 
-fun lcm(a: Long, b: Long): Long =
-  a / gcd(a, b) * b
+fun lcm(a: Long, b: Long): Long = a / gcd(a, b) * b
 
-tailrec fun gcd(a: Int, b: Int): Int =
-  if (b == 0) a else gcd(b, a % b)
+tailrec fun gcd(a: Int, b: Int): Int = if (b == 0) a else gcd(b, a % b)
 
-fun lcm(a: Int, b: Int): Int =
-  a / gcd(a, b) * b
+fun lcm(a: Int, b: Int): Int = a / gcd(a, b) * b
 
-tailrec fun gcd(a: BigInteger, b: BigInteger): BigInteger =
-  if (b == BigInteger.ZERO) a else gcd(b, a % b)
+tailrec fun gcd(a: BigInteger, b: BigInteger): BigInteger = if (b == BigInteger.ZERO) a else gcd(b, a % b)
 
-fun lcm(a: BigInteger, b: BigInteger): BigInteger =
-  a / gcd(a, b) * b
+fun lcm(a: BigInteger, b: BigInteger): BigInteger = a / gcd(a, b) * b
 
-fun Iterable<BigInteger>.sum(): BigInteger =
-  fold(BigInteger.ZERO) { acc, i -> acc + i }
+fun Iterable<BigInteger>.sum(): BigInteger = fold(BigInteger.ZERO) { acc, i -> acc + i }
 
 inline fun <T, R> Iterable<T>.map2Set(
   destination: MutableSet<R> = LinkedHashSet(),
   transform: (T) -> R,
-): MutableSet<R> =
-  destination.apply { for (item in this@map2Set) add(transform(item)) }
+): MutableSet<R> = destination.apply { for (item in this@map2Set) add(transform(item)) }
 
 @Suppress("NOTHING_TO_INLINE")
 private inline fun <T> Array<T>.exch(i: Int, j: Int) {
@@ -257,12 +257,12 @@ private class PriorityQueue<T>(size: Int, val comparator: Comparator<T>? = null)
   }
 
   fun peek(): T {
-    if (isEmpty()) throw NoSuchElementException()
+    if (isEmpty()) throw AdventDay.Exception("Priority queue is empty")
     return arr[1]!!
   }
 
   fun poll(): T {
-    if (isEmpty()) throw NoSuchElementException()
+    if (isEmpty()) throw AdventDay.Exception("Priority queue is empty")
     val res = peek()
     arr.exch(1, size--)
     sink(arr, 1, size, comparator)
@@ -298,8 +298,7 @@ private class PriorityQueue<T>(size: Int, val comparator: Comparator<T>? = null)
     return true
   }
 
-  override fun iterator(): Iterator<T> =
-    arr.copyOfRange(1, size + 1).map { it!! }.iterator()
+  override fun iterator(): Iterator<T> = arr.copyOfRange(1, size + 1).map { it!! }.iterator()
 
   companion object {
     private fun <T> greater(arr: Array<T?>, i: Int, j: Int, comparator: Comparator<T>? = null): Boolean {
@@ -332,8 +331,20 @@ private class PriorityQueue<T>(size: Int, val comparator: Comparator<T>? = null)
   }
 }
 
+fun <N> WeightedGraph<N, Unit>.shortestPaths(source: N): DefaultMap<N, WeightedGraph.D<Unit>> = shortestPaths(
+  source = source,
+  startDistanceContext = Unit,
+  zeroDistanceContext = Unit,
+  maxDistanceContext = Unit,
+  cost = { _, _ -> BigInteger.ONE },
+  alterContext = { _, _ -> }
+)
+
+fun <N> WeightedGraph<N, Unit>.shortestPath(source: N, destination: N): BigInteger =
+  shortestPaths(source)[destination].value
+
 class WeightedGraph<N, ECtx>(
-  private val adj: Map<N, List<E<N, ECtx>>>,
+  val adj: Map<N, Set<E<N, ECtx>>>,
 ) {
   data class E<N, E>(val to: N, val context: E)
   data class QN<N, DC>(val n: N, val distance: D<DC>)
@@ -392,6 +403,8 @@ class WeightedGraph<N, ECtx>(
     cost = cost,
     alterContext = alterContext
   )[destination]
+
+  override fun toString() = adj.toString()
 
   companion object {
     val INFINITY: BigInteger by lazy { BigInteger.fromLong(Long.MAX_VALUE) * BigInteger.fromLong(Long.MAX_VALUE) }
