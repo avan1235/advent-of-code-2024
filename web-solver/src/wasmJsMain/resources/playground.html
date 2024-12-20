@@ -9,12 +9,15 @@
   <script src="https://unpkg.com/kotlin-playground@1" data-version="2.1.0"></script>
 </head>
 <body>
-<code
-  id="code"
+<div
+  class="snippet"
   theme="idea"
   lines="true"
+  style="display: none"
   data-highlight-only
-></code>
+>
+  <div id="code" style="visibility: hidden"></div>
+</div>
 <script>
   const queryDict = {};
   location.search.substr(1).split("&").forEach(function (item) {
@@ -37,7 +40,7 @@
       const codeElement = document.getElementById("code");
       codeElement.setAttribute("data-output-height", `${vhToPixels(100)}`)
       codeElement.innerHTML = code
-      KotlinPlayground('#code');
+      KotlinPlayground('.snippet');
     });
 </script>
 </body>
