@@ -38,8 +38,8 @@
   fetchCode(`${baseUrl}Day${day}.kt`)
     .then(code => {
       const codeElement = document.getElementById("code");
-      codeElement.setAttribute("data-output-height", `${vhToPixels(100)}`)
-      codeElement.innerHTML = code
+      codeElement.setAttribute("data-output-height", `${vhToPixels(100)}`);
+      codeElement.textContent = code;
       KotlinPlayground('.snippet');
     });
 </script>
