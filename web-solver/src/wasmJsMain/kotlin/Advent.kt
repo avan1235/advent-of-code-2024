@@ -11,6 +11,7 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.ComposeViewport
@@ -18,10 +19,12 @@ import kotlinx.browser.document
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
 
+fun main() = adventWebSolver(Advent2024)
+
 @OptIn(ExperimentalComposeUiApi::class)
-fun main() {
+private fun adventWebSolver(advent: Advent) {
   ComposeViewport(document.body!!) {
-    val days = remember { Advent2024.days }
+    val days = remember { advent.days }
     val scope = rememberCoroutineScope()
     var input by remember { mutableStateOf("") }
     var selectedDay by remember { mutableStateOf(days.first()) }
@@ -68,6 +71,19 @@ fun main() {
             representation = { "Day ${it.n}" },
             modifier = Modifier.heightIn(max = 380.dp)
           )
+
+          val uriHandler = LocalUriHandler.current
+          OutlinedButton(
+            onClick = {
+              uriHandler.openUri(
+                uri = "https://raw.githubusercontent.com/avan1235/" +
+                  "advent-of-code-${advent.year}/refs/heads/master/" +
+                  "solutions/src/commonMain/kotlin/Day${selectedDay.n}.kt"
+              )
+            },
+          ) {
+            Text("Go to Solution")
+          }
 
           Row(
             verticalAlignment = Alignment.CenterVertically,
