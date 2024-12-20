@@ -23,12 +23,21 @@
   const year = queryDict["year"];
   const day = queryDict["day"];
   const baseUrl = `https://raw.githubusercontent.com/avan1235/advent-of-code-${year}/refs/heads/master/solutions/src/commonMain/kotlin/`;
-  const fetchCode = url => fetch(url).then(r => r.text());
+
+  function fetchCode(url) {
+    return fetch(url).then(r => r.text())
+  }
+
+  function vhToPixels(vh) {
+    return Math.round(window.innerHeight / (100 / vh)) + 'px';
+  }
+
   fetchCode(`${baseUrl}Day${day}.kt`)
     .then(code => {
-      document.getElementById("code").innerHTML = code
+      const codeElement = document.getElementById("code");
+      codeElement.setAttribute("data-output-height", `${vhToPixels(100)}`)
+      codeElement.innerHTML = code
       KotlinPlayground('#code');
-      setTimeout(() => document.getElementById("loading-state").remove(), 50000);
     });
 </script>
 </body>
