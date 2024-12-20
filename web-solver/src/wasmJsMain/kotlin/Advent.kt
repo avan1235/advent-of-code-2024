@@ -98,7 +98,7 @@ private fun adventWebSolver(advent: Advent) {
             onClick = {
               val day = selectedDay
               val input = input
-              runningJob = scope.launch(Dispatchers.Default.limitedParallelism(4)) {
+              runningJob = scope.launch(Dispatchers.Default) {
                 try {
                   coroutineScope {
                     val debug = Channel<String>()
