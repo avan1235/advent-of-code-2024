@@ -5,10 +5,10 @@ abstract class AdventDay(val n: Int) : Comparable<AdventDay> {
 
   protected abstract suspend fun SolveContext.solve(lines: List<String>)
 
-  suspend fun solve(with: AdventInputReader): Solution =
+  suspend fun solve(with: InputReader): Solution =
     SolveContext().use { with(it) { solve(with) } }
 
-  suspend fun SolveContext.solve(with: AdventInputReader): Solution {
+  suspend fun SolveContext.solve(with: InputReader): Solution {
     val lines = with.readInput(this@AdventDay).trim().lines()
     solve(lines)
     return Solution(part1 ?: NotSolvedDescription, part2 ?: NotSolvedDescription)
@@ -22,6 +22,11 @@ abstract class AdventDay(val n: Int) : Comparable<AdventDay> {
 
   override fun compareTo(other: AdventDay): Int =
     n.compareTo(other.n)
+
+  fun interface InputReader {
+
+    fun readInput(day: AdventDay): String
+  }
 
   class Exception(override val message: String) : kotlin.Exception(message)
 

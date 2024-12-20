@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Advent of Code 2024 | Playground</title>
+  <link type="text/css" rel="stylesheet" href="styles.css">
+  <link rel="icon" type="image/png" href="favicon.png">
+  <script src="https://unpkg.com/kotlin-playground@1" data-version="2.1.0"></script>
+</head>
+<body>
+<code
+  id="code"
+  theme="idea"
+  lines="true"
+  data-highlight-only
+></code>
+<script>
+  const queryDict = {};
+  location.search.substr(1).split("&").forEach(function (item) {
+    queryDict[item.split("=")[0]] = item.split("=")[1]
+  });
+  const year = queryDict["year"];
+  const day = queryDict["day"];
+  const baseUrl = `https://raw.githubusercontent.com/avan1235/advent-of-code-${year}/refs/heads/master/solutions/src/commonMain/kotlin/`;
+  const fetchCode = url => fetch(url).then(r => r.text());
+  fetchCode(`${baseUrl}Day${day}.kt`)
+    .then(code => {
+      document.getElementById("code").innerHTML = code
+      KotlinPlayground('#code');
+      setTimeout(() => document.getElementById("loading-state").remove(), 50000);
+    });
+</script>
+</body>
+</html>

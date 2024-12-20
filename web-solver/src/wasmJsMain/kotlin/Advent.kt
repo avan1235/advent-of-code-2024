@@ -71,15 +71,10 @@ private fun adventWebSolver(advent: Advent) {
             representation = { "Day ${it.n}" },
             modifier = Modifier.heightIn(max = 380.dp)
           )
-
           val uriHandler = LocalUriHandler.current
           OutlinedButton(
             onClick = {
-              uriHandler.openUri(
-                uri = "https://raw.githubusercontent.com/avan1235/" +
-                  "advent-of-code-${advent.year}/refs/heads/master/" +
-                  "solutions/src/commonMain/kotlin/Day${selectedDay.n}.kt"
-              )
+              uriHandler.openUri("/playground.html?year=${advent.year}&day=${selectedDay.n}")
             },
           ) {
             Text("Go to Solution")
@@ -103,7 +98,7 @@ private fun adventWebSolver(advent: Advent) {
             onClick = {
               val day = selectedDay
               val input = input
-              runningJob = scope.launch(Dispatchers.Default) {
+              runningJob = scope.launch(Dispatchers.Default.limitedParallelism(4)) {
                 try {
                   coroutineScope {
                     val debug = Channel<String>()

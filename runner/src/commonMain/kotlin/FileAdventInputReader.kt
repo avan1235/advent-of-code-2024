@@ -4,7 +4,7 @@ import kotlinx.io.files.Path
 import kotlinx.io.files.SystemFileSystem
 import kotlinx.io.readByteString
 
-object FileAdventInputReader : AdventInputReader {
+object FileAdventInputReader : AdventDay.InputReader {
 
   override fun readInput(day: AdventDay): String = SystemFileSystem.run {
     val inputPath = Path("input", "Day${day.n}.in")
