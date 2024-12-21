@@ -412,7 +412,7 @@ class WeightedGraph<N, ECtx>(
 }
 
 enum class Dir(val v: V2) {
-  N(0 xy -1), E(1 xy 0), S(0 xy 1), W(-1 xy 0);
+  N(0 xy 1), E(1 xy 0), S(0 xy -1), W(-1 xy 0);
 
   val reversed: Dir
     get() = when (this) {

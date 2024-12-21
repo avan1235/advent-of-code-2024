@@ -30,4 +30,5 @@ internal class AdventTest {
   @Test fun testDay18() = testAdventDay(Day18, "320", "34,40")
   @Test fun testDay19() = testAdventDay(Day19, "327", "772696486795255")
   @Test fun testDay20() = testAdventDay(Day20, "1530", "1033983")
+  @Test fun testDay21() = testAdventDay(Day21, "137870", "170279148659464")
 }
