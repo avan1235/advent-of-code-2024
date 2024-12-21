@@ -30,9 +30,3 @@ kotlin {
     }
   }
 }
-
-tasks.withType<Test> {
-  useJUnitPlatform()
-  maxHeapSize = "8g"
-  maxParallelForks = getRuntime().availableProcessors().div(2).takeIf { it > 0 } ?: 1
-}
