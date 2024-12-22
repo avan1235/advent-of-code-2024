@@ -76,7 +76,9 @@ private fun adventWebSolver(advent: Advent) {
 
     Column(
       verticalArrangement = Arrangement.spacedBy(16.dp),
-      modifier = Modifier.verticalScroll(rememberScrollState()).padding(horizontal = 24.dp)
+      modifier = Modifier
+        .verticalScroll(rememberScrollState())
+        .padding(horizontal = 24.dp)
         .onGloballyPositioned { horizontal = it.size.width >= 1200 },
     ) {
       Spacer(Modifier.height(24.dp))
@@ -98,11 +100,18 @@ private fun adventWebSolver(advent: Advent) {
 
       Column {
         TextField(
-          value = input, onValueChange = { input = it }, colors = TextFieldDefaults.textFieldColors(
+          value = input,
+          onValueChange = { input = it },
+          colors = TextFieldDefaults.textFieldColors(
             backgroundColor = MaterialTheme.colors.surface,
-          ), shape = RectangleShape, modifier = Modifier.heightIn(
-            min = TextBoxMinHeight, max = TextBoxMaxHeight
-          ).fillMaxWidth()
+          ),
+          shape = RectangleShape,
+          modifier = Modifier
+            .heightIn(
+              min = TextBoxMinHeight,
+              max = TextBoxMaxHeight
+            )
+            .fillMaxWidth()
         )
         AnimatedVisibility(visible = runningJob != null) {
           LinearProgressIndicator(Modifier.fillMaxWidth())
@@ -121,7 +130,9 @@ private fun adventWebSolver(advent: Advent) {
         visible = showLog
       ) {
         Box(
-          modifier = Modifier.fillMaxWidth().height(TextBoxMaxHeight)
+          modifier = Modifier
+            .fillMaxWidth()
+            .height(TextBoxMaxHeight)
         ) {
           val listState = rememberLazyListState()
           val lines = log.lines()
@@ -131,13 +142,16 @@ private fun adventWebSolver(advent: Advent) {
           LazyColumn(
             state = listState,
             verticalArrangement = Arrangement.spacedBy(4.dp),
-            modifier = Modifier.fillMaxSize().border(Dp.Hairline, Color.LightGray, RectangleShape)
+            modifier = Modifier.fillMaxSize()
+              .border(Dp.Hairline, Color.LightGray, RectangleShape)
               .padding(horizontal = LineSpacingHeight),
           ) {
             itemsIndexed(items = lines, key = { idx, _ -> idx }, itemContent = { _, line -> Text(line) })
           }
           VerticalScrollbar(
-            modifier = Modifier.align(Alignment.CenterEnd).fillMaxHeight(),
+            modifier = Modifier
+              .align(Alignment.CenterEnd)
+              .fillMaxHeight(),
             adapter = rememberScrollbarAdapter(listState),
           )
         }
@@ -197,12 +211,12 @@ private inline fun ControlElements(
     options = days,
     representation = { "Day ${it.n}" },
     modifier = Modifier
+      .fillMaxWidthIf(!horizontal)
       .heightIn(max = 380.dp)
-      .runIf(!horizontal) { fillMaxWidth() }
   )
   val uriHandler = LocalUriHandler.current
   OutlinedButton(
-    modifier = if (!horizontal) Modifier.fillMaxWidth() else Modifier,
+    modifier = Modifier.fillMaxWidthIf(!horizontal),
     onClick = {
       uriHandler.openUri("/playground.html?year=${advent.year}&day=${selectedDay.n}")
     },
@@ -212,7 +226,7 @@ private inline fun ControlElements(
 
   Row(
     verticalAlignment = Alignment.CenterVertically,
-    modifier = if (!horizontal) Modifier.fillMaxWidth() else Modifier,
+    modifier = Modifier.fillMaxWidthIf(!horizontal),
   ) {
     Checkbox(
       checked = showLog,
@@ -222,19 +236,22 @@ private inline fun ControlElements(
   }
   Button(
     onClick = { onSolve() },
-    modifier = if (!horizontal) Modifier.fillMaxWidth() else Modifier,
+    modifier = Modifier.fillMaxWidthIf(!horizontal),
     enabled = runningJob == null,
   ) {
     Text("Solve")
   }
   OutlinedButton(
     onClick = { cancelRunningJob() },
-    modifier = if (!horizontal) Modifier.fillMaxWidth() else Modifier,
+    modifier = Modifier.fillMaxWidthIf(!horizontal),
     enabled = runningJob != null,
   ) {
     Text("Cancel")
   }
 }
+
+private fun Modifier.fillMaxWidthIf(condition: Boolean): Modifier =
+  if (condition) fillMaxWidth() else this
 
 private val TextBoxMinHeight: Dp = 120.dp
 private val TextBoxMaxHeight: Dp = 480.dp
