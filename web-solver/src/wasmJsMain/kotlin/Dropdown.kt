@@ -1,7 +1,9 @@
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.defaultMinSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.DropdownMenu
 import androidx.compose.material.DropdownMenuItem
@@ -13,6 +15,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
@@ -36,19 +39,24 @@ internal fun <T> Dropdown(
   Box(
     contentAlignment = Alignment.CenterStart,
     modifier = Modifier
-      .size(250.dp, 32.dp)
+      .height(36.dp)
       .clip(RoundedCornerShape(4.dp))
       .border(BorderStroke(1.dp, Color.LightGray), RoundedCornerShape(4.dp))
-      .clickable { expanded = !expanded },
+      .runIf(!expanded) { clickable { expanded = true } },
   ) {
     Text(
       text = representation(selectedOption),
       fontSize = 14.sp,
-      modifier = Modifier.padding(start = 10.dp)
+      modifier = Modifier
+        .padding(start = 16.dp, end = 32.dp)
     )
+    val degree by animateFloatAsState(if (expanded) 180f else 0f)
     Icon(
-      Icons.Filled.ArrowDropDown, "contentDescription",
-      Modifier.align(Alignment.CenterEnd)
+      imageVector = Icons.Filled.ArrowDropDown,
+      contentDescription = "contentDescription",
+      modifier = Modifier
+        .align(Alignment.CenterEnd)
+        .rotate(degree)
     )
     DropdownMenu(
       expanded = expanded,
@@ -60,6 +68,8 @@ internal fun <T> Dropdown(
     ) {
       options.forEach { selectionOption ->
         DropdownMenuItem(
+          modifier = Modifier
+            .height(40.dp),
           onClick = {
             selectedOption = selectionOption
             expanded = false
