@@ -38,7 +38,7 @@ internal fun <T> Dropdown(
 
   Box(
     contentAlignment = Alignment.CenterStart,
-    modifier = Modifier
+    modifier = modifier
       .height(36.dp)
       .clip(RoundedCornerShape(4.dp))
       .border(BorderStroke(1.dp, Color.LightGray), RoundedCornerShape(4.dp))

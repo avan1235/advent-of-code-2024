@@ -11,6 +11,7 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -24,15 +25,16 @@ fun main() = adventWebSolver(Advent2024)
 @OptIn(ExperimentalComposeUiApi::class)
 private fun adventWebSolver(advent: Advent) {
   ComposeViewport(document.body!!) {
-    val days = remember { advent.days }
-    val scope = rememberCoroutineScope()
     var input by remember { mutableStateOf("") }
-    var selectedDay by remember { mutableStateOf(days.first()) }
     var solution by remember { mutableStateOf<String?>(null) }
     var errorMessage by remember { mutableStateOf<String?>(null) }
     var showLog by remember { mutableStateOf(false) }
     var log by remember { mutableStateOf(StringBuilder(), policy = neverEqualPolicy()) }
     var runningJob by remember { mutableStateOf<Job?>(null) }
+    val days = remember { advent.days }
+    val scope = rememberCoroutineScope()
+    var selectedDay by remember { mutableStateOf(days.first()) }
+    var horizontal by remember { mutableStateOf(true) }
 
     fun cancelRunningJob() {
       runningJob?.cancel()
@@ -42,115 +44,65 @@ private fun adventWebSolver(advent: Advent) {
       input = ""
     }
 
+    fun onSolve() {
+      val day = selectedDay
+      val input = input
+      runningJob = scope.launch(Dispatchers.Default) {
+        try {
+          coroutineScope {
+            val debug = Channel<String>()
+            launch {
+              for (line in debug) {
+                log = log.appendLine(line)
+              }
+            }
+            day.SolveContext(debug).use { context ->
+              with(day) { context.solve(input) }.run {
+                solution = "Part 1: ${part1}\nPart 2: $part2"
+              }
+            }
+          }
+        } catch (e: AdventDay.Exception) {
+          errorMessage = e.message
+        } catch (e: CancellationException) {
+          throw e
+        } catch (e: Exception) {
+          errorMessage = e.stackTraceToString()
+        } finally {
+          runningJob = null
+        }
+      }
+    }
+
     Column(
       verticalArrangement = Arrangement.spacedBy(16.dp),
-      modifier = Modifier
-        .verticalScroll(rememberScrollState())
-        .padding(horizontal = 24.dp),
+      modifier = Modifier.verticalScroll(rememberScrollState()).padding(horizontal = 24.dp)
+        .onGloballyPositioned { horizontal = it.size.width >= 1200 },
     ) {
       Spacer(Modifier.height(24.dp))
 
-      Row(
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier.fillMaxWidth(),
-      ) {
-        Row(
-          horizontalArrangement = Arrangement.spacedBy(16.dp),
-          verticalAlignment = Alignment.CenterVertically,
-        ) {
-          Dropdown(
-            preselected = selectedDay,
-            onOptionSelected = {
-              if (selectedDay != it) {
-                cancelRunningJob()
-                selectedDay = it
-              }
-            },
-            options = days,
-            representation = { "Day ${it.n}" },
-            modifier = Modifier.heightIn(max = 380.dp)
-          )
-          val uriHandler = LocalUriHandler.current
-          OutlinedButton(
-            onClick = {
-              uriHandler.openUri("/playground.html?year=${advent.year}&day=${selectedDay.n}")
-            },
-          ) {
-            Text("Go to Solution")
-          }
-
-          Row(
-            verticalAlignment = Alignment.CenterVertically,
-          ) {
-            Checkbox(
-              checked = showLog,
-              onCheckedChange = { showLog = it },
-            )
-            Text("Show Log")
-          }
-        }
-        Row(
-          horizontalArrangement = Arrangement.spacedBy(16.dp),
-          verticalAlignment = Alignment.CenterVertically,
-        ) {
-          Button(
-            onClick = {
-              val day = selectedDay
-              val input = input
-              runningJob = scope.launch(Dispatchers.Default) {
-                try {
-                  coroutineScope {
-                    val debug = Channel<String>()
-                    launch {
-                      for (line in debug) {
-                        log = log.appendLine(line)
-                      }
-                    }
-                    day.SolveContext(debug).use { context ->
-                      with(day) { context.solve(input) }.run {
-                        solution = "Part 1: ${part1}\nPart 2: $part2"
-                      }
-                    }
-                  }
-                } catch (e: AdventDay.Exception) {
-                  errorMessage = e.message
-                } catch (e: CancellationException) {
-                  throw e
-                } catch (e: Exception) {
-                  errorMessage = e.stackTraceToString()
-                } finally {
-                  runningJob = null
-                }
-              }
-            },
-            enabled = runningJob == null,
-          ) {
-            Text("Solve")
-          }
-          OutlinedButton(
-            onClick = ::cancelRunningJob,
-            enabled = runningJob != null,
-          ) {
-            Text("Cancel")
-          }
-        }
+      DynamicColumnRow(horizontal) {
+        ControlElements(
+          horizontal = horizontal,
+          selectedDay = selectedDay,
+          onSelectedDayChange = { selectedDay = it },
+          advent = advent,
+          days = days,
+          showLog = showLog,
+          onShowLogChange = { showLog = it },
+          cancelRunningJob = ::cancelRunningJob,
+          onSolve = ::onSolve,
+          runningJob = runningJob,
+        )
       }
 
       Column {
         TextField(
-          value = input,
-          onValueChange = { input = it },
-          colors = TextFieldDefaults.textFieldColors(
+          value = input, onValueChange = { input = it }, colors = TextFieldDefaults.textFieldColors(
             backgroundColor = MaterialTheme.colors.surface,
-          ),
-          shape = RectangleShape,
-          modifier = Modifier
-            .heightIn(
-              min = TextBoxMinHeight,
-              max = TextBoxMaxHeight
-            )
-            .fillMaxWidth()
+          ), shape = RectangleShape, modifier = Modifier.heightIn(
+            min = TextBoxMinHeight, max = TextBoxMaxHeight
+          ).fillMaxWidth()
         )
         AnimatedVisibility(visible = runningJob != null) {
           LinearProgressIndicator(Modifier.fillMaxWidth())
@@ -169,9 +121,7 @@ private fun adventWebSolver(advent: Advent) {
         visible = showLog
       ) {
         Box(
-          modifier = Modifier
-            .fillMaxWidth()
-            .height(TextBoxMaxHeight)
+          modifier = Modifier.fillMaxWidth().height(TextBoxMaxHeight)
         ) {
           val listState = rememberLazyListState()
           val lines = log.lines()
@@ -181,21 +131,13 @@ private fun adventWebSolver(advent: Advent) {
           LazyColumn(
             state = listState,
             verticalArrangement = Arrangement.spacedBy(4.dp),
-            modifier = Modifier
-              .fillMaxSize()
-              .border(Dp.Hairline, Color.LightGray, RectangleShape)
+            modifier = Modifier.fillMaxSize().border(Dp.Hairline, Color.LightGray, RectangleShape)
               .padding(horizontal = LineSpacingHeight),
           ) {
-            itemsIndexed(
-              items = lines,
-              key = { idx, _ -> idx },
-              itemContent = { _, line -> Text(line) }
-            )
+            itemsIndexed(items = lines, key = { idx, _ -> idx }, itemContent = { _, line -> Text(line) })
           }
           VerticalScrollbar(
-            modifier = Modifier
-              .align(Alignment.CenterEnd)
-              .fillMaxHeight(),
+            modifier = Modifier.align(Alignment.CenterEnd).fillMaxHeight(),
             adapter = rememberScrollbarAdapter(listState),
           )
         }
@@ -203,6 +145,94 @@ private fun adventWebSolver(advent: Advent) {
 
       Spacer(Modifier.height(24.dp))
     }
+  }
+}
+
+@Composable
+private inline fun DynamicColumnRow(
+  horizontal: Boolean,
+  modifier: Modifier = Modifier,
+  content: @Composable () -> Unit,
+) {
+  when {
+    horizontal -> Row(
+      horizontalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterHorizontally),
+      verticalAlignment = Alignment.CenterVertically,
+      modifier = modifier,
+    ) {
+      content()
+    }
+
+    else -> Column(
+      horizontalAlignment = Alignment.Start,
+      verticalArrangement = Arrangement.Center,
+      modifier = modifier,
+    ) {
+      content()
+    }
+  }
+}
+
+@Composable
+private inline fun ControlElements(
+  horizontal: Boolean,
+  selectedDay: AdventDay,
+  crossinline onSelectedDayChange: (AdventDay) -> Unit,
+  advent: Advent,
+  days: List<AdventDay>,
+  showLog: Boolean,
+  crossinline onShowLogChange: (Boolean) -> Unit,
+  crossinline cancelRunningJob: () -> Unit,
+  crossinline onSolve: () -> Unit,
+  runningJob: Job?,
+) {
+  Dropdown(
+    preselected = selectedDay,
+    onOptionSelected = {
+      if (selectedDay != it) {
+        cancelRunningJob()
+        onSelectedDayChange(it)
+      }
+    },
+    options = days,
+    representation = { "Day ${it.n}" },
+    modifier = Modifier
+      .heightIn(max = 380.dp)
+      .runIf(!horizontal) { fillMaxWidth() }
+  )
+  val uriHandler = LocalUriHandler.current
+  OutlinedButton(
+    modifier = if (!horizontal) Modifier.fillMaxWidth() else Modifier,
+    onClick = {
+      uriHandler.openUri("/playground.html?year=${advent.year}&day=${selectedDay.n}")
+    },
+  ) {
+    Text("Go to Solution")
+  }
+
+  Row(
+    verticalAlignment = Alignment.CenterVertically,
+    modifier = if (!horizontal) Modifier.fillMaxWidth() else Modifier,
+  ) {
+    Checkbox(
+      checked = showLog,
+      onCheckedChange = { onShowLogChange(it) },
+    )
+    Text("Show Log")
+  }
+  Button(
+    onClick = { onSolve() },
+    modifier = if (!horizontal) Modifier.fillMaxWidth() else Modifier,
+    enabled = runningJob == null,
+  ) {
+    Text("Solve")
+  }
+  OutlinedButton(
+    onClick = { cancelRunningJob() },
+    modifier = if (!horizontal) Modifier.fillMaxWidth() else Modifier,
+    enabled = runningJob != null,
+  ) {
+    Text("Cancel")
   }
 }
 
