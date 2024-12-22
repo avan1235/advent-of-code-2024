@@ -23,5 +23,6 @@ data object Advent2024 : Advent {
     Day19,
     Day20,
     Day21,
+    Day22,
   )
 }
