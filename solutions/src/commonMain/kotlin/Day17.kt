@@ -4,7 +4,7 @@ import com.ionspin.kotlin.bignum.integer.toBigInteger
 data object Day17 : AdventDay(n = 17) {
   override suspend fun SolveContext.solve(lines: List<String>) {
 
-    val (rawRegisters, rawProgram) = lines.groupSeparatedBy(separator = { it == "" }, transform = { it })
+    val (rawRegisters, rawProgram) = lines.groupSeparatedByBlankLine()
     val registers = rawRegisters.associate {
       RegisterRegex.matchEntire(it)!!.groups.let { it["name"]!!.value to it["value"]!!.value.toBigInteger() }
     }.toRegisters()

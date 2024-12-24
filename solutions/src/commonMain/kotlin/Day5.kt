@@ -1,6 +1,6 @@
 data object Day5 : AdventDay(n = 5) {
   override suspend fun SolveContext.solve(lines: List<String>) {
-    val (rawRules, rawUpdates) = lines.groupSeparatedBy(separator = { it == "" }) { it }
+    val (rawRules, rawUpdates) = lines.groupSeparatedByBlankLine()
 
     val rules = rawRules.map {
       it.split("|").let { (before, after) -> before.toLong() to after.toLong() }

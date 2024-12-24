@@ -3,7 +3,7 @@ import com.ionspin.kotlin.bignum.integer.BigInteger
 
 data object Day19 : AdventDay(n = 19) {
   override suspend fun SolveContext.solve(lines: List<String>) {
-    val (availableRaw, display) = lines.groupSeparatedBy(separator = { it == "" }) { it }
+    val (availableRaw, display) = lines.groupSeparatedByBlankLine()
     val available = charSequenceTrieOf(*availableRaw.single().split(", ").toTypedArray())
 
     val matches = display.map { it.countPossibleMatches(available) }

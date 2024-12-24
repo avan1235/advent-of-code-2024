@@ -2,9 +2,10 @@ import com.ionspin.kotlin.bignum.integer.BigInteger
 
 data object Day24 : AdventDay(n = 24) {
   override suspend fun SolveContext.solve(lines: List<String>) {
-    val (rawInit, rawGates) = lines.groupSeparatedBy(separator = { it == "" }, transform = { it })
+    val (rawInit, rawGates) = lines.groupSeparatedByBlankLine()
 
-    val states = rawInit.associateTo(mutableMapOf()) { it.split(": ").let { (name, value) -> name to (value.toInt() == 1) } }
+    val states =
+      rawInit.associateTo(mutableMapOf()) { it.split(": ").let { (name, value) -> name to (value.toInt() == 1) } }
     val gates = rawGates.map { it.toGate() }
 
     val graph = buildMap {
@@ -26,8 +27,11 @@ data object Day24 : AdventDay(n = 24) {
         is Gate.Xor -> left xor right
       }
     }
-    states.entries.filter { it.key.startsWith("z") }.sortedByDescending { it.key }
-      .joinToString("") { if (it.value) "1" else "0" }.let { BigInteger.parseString(it, base = 2) }.part1()
+    states.entries
+      .filter { it.key.startsWith("z") }
+      .sortedByDescending { it.key }
+      .joinToString("") { if (it.value) "1" else "0" }
+      .let { BigInteger.parseString(it, base = 2) }.part1()
 
     gates.fix(emptyList())!!.sorted().joinToString(",").part2()
   }

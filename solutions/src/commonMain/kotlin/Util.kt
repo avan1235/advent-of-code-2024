@@ -18,6 +18,9 @@ inline fun <reified T> String.value(): T = when (T::class) {
 
 inline fun <reified T> String.separated(by: String): List<T> = split(by).map { it.value() }
 
+fun List<String>.groupSeparatedByBlankLine(): List<List<String>> =
+  groupSeparatedBy({ it.isBlank() }) { it }
+
 fun <U, V> List<U>.groupSeparatedBy(
   separator: (U) -> Boolean,
   includeSeparator: Boolean = false,

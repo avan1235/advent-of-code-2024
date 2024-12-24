@@ -4,7 +4,7 @@ import WideWarehouseMap.Element.*
 
 data object Day15 : AdventDay(n = 15) {
   override suspend fun SolveContext.solve(lines: List<String>) {
-    val (rawMap, rawMoves) = lines.groupSeparatedBy(separator = { it == "" }, transform = { it })
+    val (rawMap, rawMoves) = lines.groupSeparatedByBlankLine()
 
     val moves = rawMoves.joinToString("")
 
