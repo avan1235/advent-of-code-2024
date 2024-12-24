@@ -2,7 +2,6 @@
 
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
-import java.lang.Runtime.getRuntime
 
 plugins {
   alias(libs.plugins.kotlinMultiplatform)
