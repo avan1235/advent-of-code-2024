@@ -58,7 +58,7 @@ private fun adventWebSolver(advent: Advent) {
             }
             day.SolveContext(debug).use { context ->
               with(day) { context.solve(input) }.run {
-                solution = "Part 1: ${part1}\nPart 2: $part2"
+                solution = "Part 1: ${part1 ?: "<not-solved>"}\nPart 2: ${part2 ?: NotSolvedDescription}"
               }
             }
           }
@@ -256,3 +256,5 @@ private fun Modifier.fillMaxWidthIf(condition: Boolean): Modifier =
 private val TextBoxMinHeight: Dp = 120.dp
 private val TextBoxMaxHeight: Dp = 480.dp
 private val LineSpacingHeight: Dp = 4.dp
+
+private const val NotSolvedDescription = "<not-solved>"

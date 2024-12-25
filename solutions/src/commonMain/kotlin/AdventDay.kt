@@ -11,7 +11,7 @@ abstract class AdventDay(val n: Int) : Comparable<AdventDay> {
   suspend fun SolveContext.solve(with: InputReader): Solution {
     val lines = with.readInput(this@AdventDay).trim().lines()
     solve(lines)
-    return Solution(part1 ?: NotSolvedDescription, part2 ?: NotSolvedDescription)
+    return Solution(part1, part2)
   }
 
   suspend fun solve(input: String): Solution =
@@ -30,7 +30,7 @@ abstract class AdventDay(val n: Int) : Comparable<AdventDay> {
 
   class Exception(override val message: String) : kotlin.Exception(message)
 
-  data class Solution(val part1: String, val part2: String)
+  data class Solution(val part1: String?, val part2: String?)
 
   @Suppress("CONTEXT_RECEIVERS_DEPRECATED")
   inner class SolveContext(
@@ -64,5 +64,3 @@ abstract class AdventDay(val n: Int) : Comparable<AdventDay> {
       this ?: throw Exception(message)
   }
 }
-
-private const val NotSolvedDescription: String = "<no-solution>"
