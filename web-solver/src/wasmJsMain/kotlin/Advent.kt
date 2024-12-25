@@ -34,6 +34,9 @@ private fun adventWebSolver(advent: Advent) {
     val days = remember { advent.days }
     val scope = rememberCoroutineScope()
     var selectedDay by remember { mutableStateOf(days.first()) }
+    LaunchedEffect(selectedDay) {
+      document.title = "Day ${selectedDay.n} - Advent of Code 2024 | Solver"
+    }
     var horizontal by remember { mutableStateOf(true) }
 
     fun cancelRunningJob() {
