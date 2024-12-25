@@ -50,21 +50,34 @@ private fun List<Gate>.fix(swapped: List<String> = emptyList()): List<String>? {
   val gatesByAnyInputs = gates.groupBy { it.left } + gates.groupBy { it.right }
   val gatesByOut = gates.groupBy { it.out }
 
+  fun swapByOutAndFix(out1: String, out2: String): List<String>? {
+    val swapped1 = gatesByOut[out1]!!.single()
+    val swapped2 = gatesByOut[out2]!!.single()
+
+    return buildList {
+      addAll(this@fix.filter { it != swapped1 && it != swapped2 })
+      add(swapped1.copy(out = swapped2.out))
+      add(swapped2.copy(out = swapped1.out))
+    }.fix(swapped + listOf(out1, out2))
+  }
+
   var carry: String? = null
 
-  for (bit in 0..44) {
+  for (bit in 0..45) {
     val index = bit.toString().padStart(2, '0')
     val i1 = setOf("x$index", "y$index")
     val (sum1, carry1) = gatesByInputs.findGatesXorAndBy(i1)
 
     if (sum1 == null || carry1 == null) {
-      error("broken at index $bit")
-      break
+      if (gatesByAnyInputs["x$index"] == null && gatesByAnyInputs["y$index"] == null && carry == "z$index") {
+        break
+      }
+      error("unexpected case")
     }
 
     if (carry == null) {
       if (sum1 != "z$index") {
-        error("invalid output")
+        error("unexpected case")
       }
       carry = carry1
     } else {
@@ -75,47 +88,26 @@ private fun List<Gate>.fix(swapped: List<String> = emptyList()): List<String>? {
         val expectedOut = gatesByOut["z$index"]!!.filterIsInstance<Gate.Xor>().single()
         val swappedOutput1 = (i2 - expectedOut.inputs).single()
         val swappedOutput2 = (expectedOut.inputs - i2).single()
-        val swapped1 = gatesByOut[swappedOutput1]!!.single()
-        val swapped2 = gatesByOut[swappedOutput2]!!.single()
-        buildList {
-          addAll(this@fix.filter { it != swapped1 && it != swapped2 })
-          add(swapped1.copy(out = swapped2.out))
-          add(swapped2.copy(out = swapped1.out))
-        }.fix(swapped + listOf(swappedOutput1, swappedOutput2))?.let { return@fix it }
+        swapByOutAndFix(swappedOutput1, swappedOutput2)?.let { return it }
 
-        error("broken at index")
+        error("unexpected case")
       }
 
       val or = gatesByInputs[setOf(carry1, carry2)].orEmpty().filterIsInstance<Gate.Or>().singleOrNull() ?: run {
 
         gatesByAnyInputs[carry1]?.filterIsInstance<Gate.Or>()?.singleOrNull()?.let {
           val otherInput = (it.inputs - carry1).single()
-          val swapped1 = gatesByOut[otherInput]!!.single()
-          val swapped2 = gatesByOut[carry2]!!.single()
-
-          buildList {
-            addAll(this@fix.filter { it != swapped1 && it != swapped2 })
-            add(swapped1.copy(out = swapped2.out))
-            add(swapped2.copy(out = swapped1.out))
-          }.fix(swapped + listOf(otherInput, carry2))?.let { return@fix it }
+          swapByOutAndFix(otherInput, carry2)?.let { return it }
         }
 
         gatesByAnyInputs[carry2]?.filterIsInstance<Gate.Or>()?.singleOrNull()?.let {
           val otherInput = (it.inputs - carry2).single()
-          val swapped1 = gatesByOut[otherInput]!!.single()
-          val swapped2 = gatesByOut[carry1]!!.single()
-
-          buildList {
-            addAll(this@fix.filter { it != swapped1 && it != swapped2 })
-            add(swapped1.copy(out = swapped2.out))
-            add(swapped2.copy(out = swapped1.out))
-          }.fix(swapped + listOf(otherInput, carry1))?.let { return@fix it }
+          swapByOutAndFix(otherInput, carry1)?.let { return it }
         }
 
-        error("")
+        error("unexpected case")
       }
       carry = or.out
-
     }
   }
   return swapped
