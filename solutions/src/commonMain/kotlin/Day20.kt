@@ -10,6 +10,8 @@ data object Day20 : AdventDay(n = 20) {
   }
 }
 
+private data class NodeDistances(val toNode: BigInteger, val fromNode: BigInteger)
+
 private data class Racetrack(
   val graph: WeightedGraph<V2, Unit>,
   val start: V2,
@@ -19,26 +21,24 @@ private data class Racetrack(
   val afterAtPath: Map<V2, Set<V2>>
 ) {
   suspend fun countCheats(length: Int): Long {
-    val originalPath = shortestPath()
     val cheats = generateCheats(length)
-    return graph.nodes.parallelMap { from ->
-      cheats.count { cheat ->
+    val lengths = graph.nodes.parallelMap { node ->
+      node to NodeDistances(
+        toNode = graph.shortestPath(start, node),
+        fromNode = graph.shortestPath(node, end),
+      )
+    }.toMap()
+    return graph.nodes.map { from ->
+      cheats.count count@{ cheat ->
         val to = from + cheat.v
         if (original[to].let { it == null || it == '#' }) return@count false
         if (to !in afterAtPath[from].orEmpty()) return@count false
 
-        val gp = LazyDefaultMap(::mutableSetOf, graph.adj.toMutableMap()).also {
-          it[from] += E(to, Unit)
-        }.let(::WeightedGraph)
-
-        val sp = copy(graph = gp).shortestPath() + cheat.cost
-        sp <= originalPath - Saved
+        val sp = lengths[from]!!.toNode + lengths[to]!!.fromNode + cheat.cost
+        sp <= lengths[end]!!.toNode - Saved
       }.toLong()
     }.sum()
   }
-
-  private fun shortestPath(): BigInteger =
-    graph.shortestPath(start, end)
 }
 
 private fun List<String>.toRacetrack(): Racetrack = Matrix2D(map(String::toList)).let { m ->

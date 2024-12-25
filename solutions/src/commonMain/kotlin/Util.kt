@@ -158,8 +158,8 @@ suspend fun <T, U> Iterable<T>.parallelMap(selector: suspend (T) -> U): List<U> 
 suspend fun <T> Iterable<T>.parallelFilter(selector: suspend (T) -> Boolean): List<T> =
   parallelMap { it to selector(it) }.filter { it.second }.map { it.first }
 
-suspend fun <T> Iterable<T>.parallelCount(selector: suspend (T) -> Boolean): Int =
-  parallelMap { selector(it) }.count { it }
+suspend fun <T> Iterable<T>.parallelCount(selector: suspend (T) -> Boolean): BigInteger =
+  parallelMap { selector(it) }.map { if (it) BigInteger.ONE else BigInteger.ZERO }.sum()
 
 data class V2(val x: Int, val y: Int) {
   override fun toString() = "($x,$y)"
