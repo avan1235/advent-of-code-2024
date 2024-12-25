@@ -4,45 +4,52 @@ data object Day24 : AdventDay(n = 24) {
   override suspend fun SolveContext.solve(lines: List<String>) {
     val (rawInit, rawGates) = lines.groupSeparatedByBlankLine()
 
-    val states =
-      rawInit.associateTo(mutableMapOf()) { it.split(": ").let { (name, value) -> name to (value.toInt() == 1) } }
+    val states = rawInit.toGateStates()
     val gates = rawGates.map { it.toGate() }
 
-    val graph = buildMap {
-      val byLeft = gates.groupBy { it.left }
-      val byRight = gates.groupBy { it.right }
-      for (gate in gates) {
-        if (gate.out in byLeft) getOrPut(gate) { mutableSetOf<Gate>() } += byLeft[gate.out].orEmpty()
-        if (gate.out in byRight) getOrPut(gate) { mutableSetOf<Gate>() } += byRight[gate.out].orEmpty()
-      }
-    }
-    val sorted = graph.topologicalSort()
-    val notSorted = gates - sorted
-    (sorted + notSorted).forEach {
-      val left = states[it.left]!!
-      val right = states[it.right]!!
-      states[it.out] = when (it) {
-        is Gate.And -> left and right
-        is Gate.Or -> left or right
-        is Gate.Xor -> left xor right
-      }
-    }
-    states.entries
-      .filter { it.key.startsWith("z") }
-      .sortedByDescending { it.key }
-      .joinToString("") { if (it.value) "1" else "0" }
-      .let { BigInteger.parseString(it, base = 2) }.part1()
-
-    gates.fix(emptyList())!!.sorted().joinToString(",").part2()
+    simulate(gates, states).part1()
+    gates.fix()!!.sorted().joinToString(",").part2()
   }
 }
 
-private fun List<Gate>.fix(swapped: List<String>): List<String>? {
+private fun simulate(gates: List<Gate>, states: Map<String, Boolean>): BigInteger {
+  val states = states.toMutableMap()
+  val graph = buildMap {
+    val byLeft = gates.groupBy { it.left }
+    val byRight = gates.groupBy { it.right }
+    for (gate in gates) {
+      if (gate.out in byLeft) getOrPut(gate) { mutableSetOf<Gate>() } += byLeft[gate.out].orEmpty()
+      if (gate.out in byRight) getOrPut(gate) { mutableSetOf<Gate>() } += byRight[gate.out].orEmpty()
+    }
+  }
+  val sorted = graph.topologicalSort()
+  val notSorted = gates - sorted
+  (sorted + notSorted).forEach {
+    val left = states[it.left]!!
+    val right = states[it.right]!!
+    states[it.out] = when (it) {
+      is Gate.And -> left and right
+      is Gate.Or -> left or right
+      is Gate.Xor -> left xor right
+    }
+  }
+  return states.entries
+    .filter { it.key.startsWith("z") }
+    .sortedByDescending { it.key }
+    .joinToString("") { if (it.value) "1" else "0" }
+    .let { BigInteger.parseString(it, base = 2) }
+}
+
+private fun List<String>.toGateStates(): Map<String, Boolean> =
+  associate { it.split(": ").let { (name, value) -> name to (value.toInt() == 1) } }
+
+private fun List<Gate>.fix(swapped: List<String> = emptyList()): List<String>? {
   val gates = this
 
   val gatesByInputs = gates.groupBy { it.inputs }
   val gatesByAnyInputs = gates.groupBy { it.left } + gates.groupBy { it.right }
   val gatesByOut = gates.groupBy { it.out }
+
   var carry: String? = null
 
   for (bit in 0..44) {
