@@ -3,6 +3,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -41,6 +42,7 @@ internal inline fun ControlElements(
   )
   val uriHandler = LocalUriHandler.current
   OutlinedButton(
+    shape = MaterialTheme.shapes.medium,
     modifier = Modifier.fillMaxWidthIf(!horizontal),
     onClick = {
       uriHandler.openUri("/playground.html?year=${advent.year}&day=${selectedDay.n}")
@@ -60,6 +62,7 @@ internal inline fun ControlElements(
     Text("Show Log")
   }
   Button(
+    shape = MaterialTheme.shapes.medium,
     onClick = { onSolve() },
     modifier = Modifier.fillMaxWidthIf(!horizontal),
     enabled = runningJob == null,
@@ -67,6 +70,7 @@ internal inline fun ControlElements(
     Text("Solve")
   }
   OutlinedButton(
+    shape = MaterialTheme.shapes.medium,
     onClick = { cancelRunningJob() },
     modifier = Modifier.fillMaxWidthIf(!horizontal),
     enabled = runningJob != null,

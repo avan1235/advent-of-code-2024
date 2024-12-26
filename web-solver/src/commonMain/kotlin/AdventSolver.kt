@@ -19,146 +19,148 @@ import kotlinx.coroutines.channels.Channel
 
 @Composable
 internal fun AdventSolver(advent: Advent) {
-  Surface(
-    modifier = Modifier.fillMaxSize(),
-  ) {
-    var input by remember { mutableStateOf("") }
-    var solution by remember { mutableStateOf<String?>(null) }
-    var errorMessage by remember { mutableStateOf<String?>(null) }
-    var showLog by remember { mutableStateOf(false) }
-    var log by remember { mutableStateOf(StringBuilder(), policy = neverEqualPolicy()) }
-    var runningJob by remember { mutableStateOf<Job?>(null) }
-    val days = remember { advent.days }
-    val scope = rememberCoroutineScope()
-    var selectedDay by remember { mutableStateOf(days.first()) }
-    LaunchedEffect(selectedDay) {
-      document.title = "Day ${selectedDay.n} - Advent of Code 2024 | Solver"
-    }
-    var horizontal by remember { mutableStateOf(true) }
-
-    fun cancelRunningJob() {
-      runningJob?.cancel()
-      solution = null
-      errorMessage = null
-      log = log.clear()
-      input = ""
-    }
-
-    fun onSolve() {
-      val day = selectedDay
-      val input = input
-      runningJob = scope.launch(Dispatchers.Default) {
-        try {
-          coroutineScope {
-            val debug = Channel<String>()
-            launch {
-              for (line in debug) {
-                log = log.appendLine(line)
-              }
-            }
-            day.SolveContext(debug).use { context ->
-              with(day) { context.solve(input) }.run {
-                solution = "Part 1: ${part1 ?: "<not-solved>"}\nPart 2: ${part2 ?: NotSolvedDescription}"
-              }
-            }
-          }
-        } catch (e: AdventDay.Exception) {
-          errorMessage = e.message
-        } catch (e: CancellationException) {
-          throw e
-        } catch (e: Exception) {
-          errorMessage = e.stackTraceToString()
-        } finally {
-          runningJob = null
-        }
-      }
-    }
-
-    Column(
-      verticalArrangement = Arrangement.spacedBy(16.dp),
-      modifier = Modifier
-        .verticalScroll(rememberScrollState())
-        .padding(horizontal = 24.dp)
-        .onGloballyPositioned { horizontal = it.size.width >= 1200 },
+  AdventTheme {
+    Surface(
+      modifier = Modifier.fillMaxSize(),
     ) {
-      Spacer(Modifier.height(24.dp))
+      var input by remember { mutableStateOf("") }
+      var solution by remember { mutableStateOf<String?>(null) }
+      var errorMessage by remember { mutableStateOf<String?>(null) }
+      var showLog by remember { mutableStateOf(false) }
+      var log by remember { mutableStateOf(StringBuilder(), policy = neverEqualPolicy()) }
+      var runningJob by remember { mutableStateOf<Job?>(null) }
+      val days = remember { advent.days }
+      val scope = rememberCoroutineScope()
+      var selectedDay by remember { mutableStateOf(days.first()) }
+      LaunchedEffect(selectedDay) {
+        document.title = "Day ${selectedDay.n} - Advent of Code 2024 | Solver"
+      }
+      var horizontal by remember { mutableStateOf(true) }
 
-      DynamicColumnRow(horizontal) {
-        ControlElements(
-          horizontal = horizontal,
-          selectedDay = selectedDay,
-          onSelectedDayChange = { selectedDay = it },
-          advent = advent,
-          days = days,
-          showLog = showLog,
-          onShowLogChange = { showLog = it },
-          cancelRunningJob = ::cancelRunningJob,
-          onSolve = ::onSolve,
-          runningJob = runningJob,
-        )
+      fun cancelRunningJob() {
+        runningJob?.cancel()
+        solution = null
+        errorMessage = null
+        log = log.clear()
+        input = ""
       }
 
-      Column {
-        TextField(
-          value = input,
-          onValueChange = { input = it },
-          colors = TextFieldDefaults.colors(
-            unfocusedContainerColor = MaterialTheme.colorScheme.surface,
-            focusedContainerColor = MaterialTheme.colorScheme.surface,
-          ),
-          shape = RectangleShape,
-          modifier = Modifier
-            .heightIn(
-              min = TextBoxMinHeight,
-              max = TextBoxMaxHeight
-            )
-            .fillMaxWidth()
-        )
-        AnimatedVisibility(visible = runningJob != null) {
-          LinearProgressIndicator(Modifier.fillMaxWidth())
+      fun onSolve() {
+        val day = selectedDay
+        val input = input
+        runningJob = scope.launch(Dispatchers.Default) {
+          try {
+            coroutineScope {
+              val debug = Channel<String>()
+              launch {
+                for (line in debug) {
+                  log = log.appendLine(line)
+                }
+              }
+              day.SolveContext(debug).use { context ->
+                with(day) { context.solve(input) }.run {
+                  solution = "Part 1: ${part1 ?: "<not-solved>"}\nPart 2: ${part2 ?: NotSolvedDescription}"
+                }
+              }
+            }
+          } catch (e: AdventDay.Exception) {
+            errorMessage = e.message
+          } catch (e: CancellationException) {
+            throw e
+          } catch (e: Exception) {
+            errorMessage = e.stackTraceToString()
+          } finally {
+            runningJob = null
+          }
         }
       }
 
-      solution?.let {
-        Text(it)
-      }
-
-      errorMessage?.let {
-        Text(it, color = Color.Red)
-      }
-
-      AnimatedVisibility(
-        visible = showLog
+      Column(
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+        modifier = Modifier
+          .verticalScroll(rememberScrollState())
+          .padding(horizontal = 24.dp)
+          .onGloballyPositioned { horizontal = it.size.width >= 1200 },
       ) {
-        Box(
-          modifier = Modifier
-            .fillMaxWidth()
-            .height(TextBoxMaxHeight)
-        ) {
-          val listState = rememberLazyListState()
-          val lines = log.lines()
-          LaunchedEffect(lines.size) {
-            listState.animateScrollToItem(lines.lastIndex)
-          }
-          LazyColumn(
-            state = listState,
-            verticalArrangement = Arrangement.spacedBy(4.dp),
-            modifier = Modifier.fillMaxSize()
-              .border(Dp.Hairline, Color.LightGray, RectangleShape)
-              .padding(horizontal = LineSpacingHeight),
-          ) {
-            itemsIndexed(items = lines, key = { idx, _ -> idx }, itemContent = { _, line -> Text(line) })
-          }
-          VerticalScrollbar(
-            modifier = Modifier
-              .align(Alignment.CenterEnd)
-              .fillMaxHeight(),
-            adapter = rememberScrollbarAdapter(listState),
+        Spacer(Modifier.height(24.dp))
+
+        DynamicColumnRow(horizontal) {
+          ControlElements(
+            horizontal = horizontal,
+            selectedDay = selectedDay,
+            onSelectedDayChange = { selectedDay = it },
+            advent = advent,
+            days = days,
+            showLog = showLog,
+            onShowLogChange = { showLog = it },
+            cancelRunningJob = ::cancelRunningJob,
+            onSolve = ::onSolve,
+            runningJob = runningJob,
           )
         }
-      }
 
-      Spacer(Modifier.height(24.dp))
+        Column {
+          TextField(
+            value = input,
+            onValueChange = { input = it },
+            colors = TextFieldDefaults.colors(
+              unfocusedContainerColor = MaterialTheme.colorScheme.surface,
+              focusedContainerColor = MaterialTheme.colorScheme.surface,
+            ),
+            shape = RectangleShape,
+            modifier = Modifier
+              .heightIn(
+                min = TextBoxMinHeight,
+                max = TextBoxMaxHeight
+              )
+              .fillMaxWidth()
+          )
+          AnimatedVisibility(visible = runningJob != null) {
+            LinearProgressIndicator(Modifier.fillMaxWidth())
+          }
+        }
+
+        solution?.let {
+          Text(it)
+        }
+
+        errorMessage?.let {
+          Text(it, color = Color.Red)
+        }
+
+        AnimatedVisibility(
+          visible = showLog
+        ) {
+          Box(
+            modifier = Modifier
+              .fillMaxWidth()
+              .height(TextBoxMaxHeight)
+          ) {
+            val listState = rememberLazyListState()
+            val lines = log.lines()
+            LaunchedEffect(lines.size) {
+              listState.animateScrollToItem(lines.lastIndex)
+            }
+            LazyColumn(
+              state = listState,
+              verticalArrangement = Arrangement.spacedBy(4.dp),
+              modifier = Modifier.fillMaxSize()
+                .border(Dp.Hairline, Color.LightGray, RectangleShape)
+                .padding(horizontal = LineSpacingHeight),
+            ) {
+              itemsIndexed(items = lines, key = { idx, _ -> idx }, itemContent = { _, line -> Text(line) })
+            }
+            VerticalScrollbar(
+              modifier = Modifier
+                .align(Alignment.CenterEnd)
+                .fillMaxHeight(),
+              adapter = rememberScrollbarAdapter(listState),
+            )
+          }
+        }
+
+        Spacer(Modifier.height(24.dp))
+      }
     }
   }
 }
