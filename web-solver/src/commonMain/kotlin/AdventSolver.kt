@@ -8,7 +8,6 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.unit.Dp
@@ -111,7 +110,8 @@ internal fun AdventSolver(advent: Advent) {
                 min = TextBoxMinHeight,
                 max = TextBoxMaxHeight
               )
-              .fillMaxWidth()
+              .fillMaxWidth(),
+            textStyle = MaterialTheme.typography.bodyMedium,
           )
           AnimatedVisibility(
             visible = runningJob != null,
@@ -148,7 +148,13 @@ internal fun AdventSolver(advent: Advent) {
                 .border(1.dp, AdventWhite, RectangleShape)
                 .padding(horizontal = LineSpacingHeight),
             ) {
-              itemsIndexed(items = lines, key = { idx, _ -> idx }, itemContent = { _, line -> Text(line) })
+              itemsIndexed(
+                items = lines,
+                key = { idx, _ -> idx },
+                itemContent = { _, line ->
+                  Text(line, style = MaterialTheme.typography.bodyMedium)
+                }
+              )
             }
             VerticalScrollbar(
               modifier = Modifier
