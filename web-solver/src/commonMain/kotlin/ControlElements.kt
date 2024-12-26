@@ -1,4 +1,7 @@
+import DynamicColumnRowScope.ColumnScope
+import DynamicColumnRowScope.RowScope
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.material3.*
@@ -10,7 +13,7 @@ import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.Job
 
 @Composable
-internal inline fun ControlElements(
+internal inline fun DynamicColumnRowScope.ControlElements(
   horizontal: Boolean,
   selectedDay: AdventDay,
   crossinline onSelectedDayChange: (AdventDay) -> Unit,
@@ -60,6 +63,12 @@ internal inline fun ControlElements(
       fontSize = MaterialTheme.typography.labelLarge.fontSize,
       lineHeight = MaterialTheme.typography.labelLarge.fontSize,
     )
+  }
+  when (this) {
+    is ColumnScope -> {}
+    is RowScope -> with(scope) {
+      Spacer(modifier = Modifier.weight(1f))
+    }
   }
   Button(
     shape = MaterialTheme.shapes.medium,
