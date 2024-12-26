@@ -1,4 +1,4 @@
-import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.*
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -25,7 +25,6 @@ internal fun AdventSolver(advent: Advent) {
     ) {
       var input by remember { mutableStateOf("") }
       var solution by remember { mutableStateOf<String?>(null) }
-      var errorMessage by remember { mutableStateOf<String?>(null) }
       var showLog by remember { mutableStateOf(false) }
       var log by remember { mutableStateOf(StringBuilder(), policy = neverEqualPolicy()) }
       var runningJob by remember { mutableStateOf<Job?>(null) }
@@ -40,7 +39,6 @@ internal fun AdventSolver(advent: Advent) {
       fun cancelRunningJob() {
         runningJob?.cancel()
         solution = null
-        errorMessage = null
         log = log.clear()
         input = ""
       }
@@ -64,11 +62,11 @@ internal fun AdventSolver(advent: Advent) {
               }
             }
           } catch (e: AdventDay.Exception) {
-            errorMessage = e.message
+            log = log.appendLine(e.message)
           } catch (e: CancellationException) {
             throw e
           } catch (e: Exception) {
-            errorMessage = e.stackTraceToString()
+            log = log.appendLine(e.stackTraceToString())
           } finally {
             runningJob = null
           }
@@ -115,7 +113,11 @@ internal fun AdventSolver(advent: Advent) {
               )
               .fillMaxWidth()
           )
-          AnimatedVisibility(visible = runningJob != null) {
+          AnimatedVisibility(
+            visible = runningJob != null,
+            enter = fadeIn(),
+            exit = fadeOut(),
+          ) {
             LinearProgressIndicator(Modifier.fillMaxWidth())
           }
         }
@@ -124,12 +126,10 @@ internal fun AdventSolver(advent: Advent) {
           Text(it)
         }
 
-        errorMessage?.let {
-          Text(it, color = Color.Red)
-        }
-
         AnimatedVisibility(
-          visible = showLog
+          visible = showLog,
+          enter = expandVertically(),
+          exit = shrinkVertically()
         ) {
           Box(
             modifier = Modifier
@@ -145,7 +145,7 @@ internal fun AdventSolver(advent: Advent) {
               state = listState,
               verticalArrangement = Arrangement.spacedBy(4.dp),
               modifier = Modifier.fillMaxSize()
-                .border(Dp.Hairline, Color.LightGray, RectangleShape)
+                .border(1.dp, AdventWhite, RectangleShape)
                 .padding(horizontal = LineSpacingHeight),
             ) {
               itemsIndexed(items = lines, key = { idx, _ -> idx }, itemContent = { _, line -> Text(line) })

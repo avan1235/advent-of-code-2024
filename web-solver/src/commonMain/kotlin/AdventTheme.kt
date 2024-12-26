@@ -17,10 +17,12 @@ internal fun AdventTheme(content: @Composable () -> Unit) {
 
   MaterialTheme(
     colorScheme = darkColorScheme(
-      primary = green,
-      background = blue,
-      surface = blue,
-      surfaceContainer = black,
+      primary = AdventGreen,
+      background = AdventBlue,
+      onBackground = AdventWhite,
+      surface = AdventBlue,
+      onSurface = AdventWhite,
+      surfaceContainer = AdventBlack,
     ),
     shapes = Shapes(
       extraSmall = CutCornerShape(0.dp),
@@ -71,6 +73,7 @@ private fun SourceCodeProFontFamily() = FontFamily(
   Font(Res.font.SourceCodePro_SemiBoldItalic, weight = FontWeight.SemiBold, style = FontStyle.Italic),
 )
 
-private val blue = Color(0xff0f0f23)
-private val black = Color(0xff10101a)
-private val green = Color(0xff009900)
+internal val AdventBlue = Color(0xff0f0f23)
+internal val AdventBlack = Color(0xff10101a)
+internal val AdventGreen = Color(0xff009900)
+internal val AdventWhite = Color(0xffcccccc)

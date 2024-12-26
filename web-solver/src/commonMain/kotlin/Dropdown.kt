@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -35,8 +36,8 @@ internal fun <T> Dropdown(
     contentAlignment = Alignment.CenterStart,
     modifier = modifier
       .height(40.dp)
-      .clip(MaterialTheme.shapes.medium)
-      .border(BorderStroke(1.dp, Color.LightGray), MaterialTheme.shapes.medium)
+      .clip(RectangleShape)
+      .border(BorderStroke(1.dp, AdventWhite), RectangleShape)
       .runIf(!expanded) { clickable { expanded = true } },
   ) {
     Text(
