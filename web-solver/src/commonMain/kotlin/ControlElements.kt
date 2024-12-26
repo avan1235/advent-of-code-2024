@@ -1,11 +1,7 @@
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
-import androidx.compose.material3.Button
-import androidx.compose.material3.Checkbox
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -59,7 +55,11 @@ internal inline fun ControlElements(
       checked = showLog,
       onCheckedChange = { onShowLogChange(it) },
     )
-    Text("Show Log")
+    Text(
+      text = "Show Log",
+      fontSize = MaterialTheme.typography.labelLarge.fontSize,
+      lineHeight = MaterialTheme.typography.labelLarge.fontSize,
+    )
   }
   Button(
     shape = MaterialTheme.shapes.medium,
