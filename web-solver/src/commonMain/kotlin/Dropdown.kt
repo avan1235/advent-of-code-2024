@@ -3,13 +3,9 @@ import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -38,21 +34,22 @@ internal fun <T> Dropdown(
   Box(
     contentAlignment = Alignment.CenterStart,
     modifier = modifier
-      .height(36.dp)
-      .clip(RoundedCornerShape(4.dp))
-      .border(BorderStroke(1.dp, Color.LightGray), RoundedCornerShape(4.dp))
+      .height(40.dp)
+      .clip(MaterialTheme.shapes.medium)
+      .border(BorderStroke(1.dp, Color.LightGray), MaterialTheme.shapes.medium)
       .runIf(!expanded) { clickable { expanded = true } },
   ) {
     Text(
       text = representation(selectedOption),
       fontSize = 14.sp,
+      lineHeight = 14.sp,
       modifier = Modifier
         .padding(start = 16.dp, end = 32.dp)
     )
     val degree by animateFloatAsState(if (expanded) 180f else 0f)
     Icon(
       imageVector = Icons.Filled.ArrowDropDown,
-      contentDescription = "contentDescription",
+      contentDescription = "open dropdown",
       modifier = Modifier
         .align(Alignment.CenterEnd)
         .rotate(degree)
