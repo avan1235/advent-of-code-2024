@@ -40,7 +40,7 @@ internal inline fun DynamicColumnRowScope.ControlElements(
       .heightIn(max = 380.dp)
   )
   val uriHandler = LocalUriHandler.current
-  OutlinedButton(
+  TextButton(
     shape = MaterialTheme.shapes.medium,
     modifier = Modifier.fillMaxWidthIf(!horizontal),
     onClick = {
@@ -70,21 +70,12 @@ internal inline fun DynamicColumnRowScope.ControlElements(
       Spacer(modifier = Modifier.weight(1f))
     }
   }
-  Button(
-    shape = MaterialTheme.shapes.medium,
-    onClick = { onSolve() },
-    modifier = Modifier.fillMaxWidthIf(!horizontal),
-    enabled = runningJob == null,
-  ) {
-    Text("Solve")
-  }
   OutlinedButton(
     shape = MaterialTheme.shapes.medium,
-    onClick = { cancelRunningJob() },
+    onClick = { if (runningJob == null) onSolve() else cancelRunningJob() },
     modifier = Modifier.fillMaxWidthIf(!horizontal),
-    enabled = runningJob != null,
   ) {
-    Text("Cancel")
+    Text(if (runningJob == null) "Solve" else "Cancel")
   }
 }
 
