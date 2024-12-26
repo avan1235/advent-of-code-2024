@@ -44,7 +44,7 @@ internal fun <T> Dropdown(
       fontSize = 14.sp,
       lineHeight = 14.sp,
       modifier = Modifier
-        .padding(start = 16.dp, end = 32.dp)
+        .padding(start = 16.dp, end = 40.dp)
     )
     val degree by animateFloatAsState(if (expanded) 180f else 0f)
     Icon(
@@ -53,6 +53,7 @@ internal fun <T> Dropdown(
       modifier = Modifier
         .align(Alignment.CenterEnd)
         .rotate(degree)
+        .padding(end = 8.dp)
     )
     DropdownMenu(
       expanded = expanded,
