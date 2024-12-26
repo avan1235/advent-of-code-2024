@@ -8,8 +8,14 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.text.AnnotatedString.Builder
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import kotlinx.browser.document
@@ -18,6 +24,7 @@ import kotlinx.coroutines.channels.Channel
 
 @Composable
 internal fun AdventSolver(advent: Advent) {
+  val yearStyle = AdventYearStyle.entries.random()
   AdventTheme {
     Surface(
       modifier = Modifier.fillMaxSize(),
@@ -79,7 +86,47 @@ internal fun AdventSolver(advent: Advent) {
           .padding(horizontal = 24.dp)
           .onGloballyPositioned { horizontal = it.size.width >= 1200 },
       ) {
-        Spacer(Modifier.height(24.dp))
+        Spacer(Modifier.height(16.dp))
+
+        CompositionLocalProvider(
+          LocalTextStyle provides MaterialTheme.typography.titleLarge,
+        ) {
+          Box(
+            modifier = Modifier.fillMaxWidth(),
+            contentAlignment = Alignment.Center,
+          ) {
+            Row(
+              horizontalArrangement = Arrangement.Start,
+              verticalAlignment = Alignment.Top,
+            ) {
+              Text(
+                buildAnnotatedString {
+                  withColorStyle(AdventBrightGreen) {
+                    appendLine("Advent of Code")
+                  }
+                  withColorStyle(AdventBrightGreen.copy(alpha = 0.33f)) {
+                    append(yearStyle.prefix)
+                  }
+                  withColorStyle(AdventBrightGreen) {
+                    append(advent.year.toString())
+                  }
+                  withColorStyle(AdventBrightGreen.copy(alpha = 0.33f)) {
+                    append(yearStyle.suffix)
+                  }
+                },
+                textAlign = TextAlign.End
+              )
+              Text(
+                buildAnnotatedString {
+                  withColorStyle(AdventGreen) {
+                    appendLine(" Solver")
+                  }
+                },
+                textAlign = TextAlign.Start
+              )
+            }
+          }
+        }
 
         DynamicColumnRow(horizontal) {
           ControlElements(
@@ -165,7 +212,7 @@ internal fun AdventSolver(advent: Advent) {
           }
         }
 
-        Spacer(Modifier.height(24.dp))
+        Spacer(Modifier.height(16.dp))
       }
     }
   }
@@ -176,3 +223,28 @@ private val TextBoxMaxHeight: Dp = 480.dp
 private val LineSpacingHeight: Dp = 4.dp
 
 private const val NotSolvedDescription = "<not-solved>"
+
+@Composable
+private inline fun <R : Any> Builder.withColorStyle(
+  color: Color,
+  style: TextStyle = LocalTextStyle.current,
+  block: Builder.() -> R
+): R = withStyle(
+  style.toSpanStyle().copy(color = color)
+) { block() }
+
+private enum class AdventYearStyle(val prefix: String, val suffix: String) {
+  Clean("", ""),
+  Json("{'year': ", "}"),
+  Php("\$year = ", ";"),
+  Yaml("year: ", "\n"),
+  Python("year = ", "\n"),
+  Haskell("λy.", ""),
+  Call("y(", ")"),
+  Mask("0xffff&", ""),
+  C("int y=", ";"),
+  Html("<y>", "</y>"),
+  Comment("/*", "*/"),
+  JS("var y=", ";"),
+  ;
+}

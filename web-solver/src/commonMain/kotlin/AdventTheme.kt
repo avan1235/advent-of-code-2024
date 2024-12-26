@@ -75,5 +75,6 @@ private fun SourceCodeProFontFamily() = FontFamily(
 
 internal val AdventBlue = Color(0xff0f0f23)
 internal val AdventBlack = Color(0xff10101a)
+internal val AdventBrightGreen = Color(0xff00cc00)
 internal val AdventGreen = Color(0xff009900)
 internal val AdventWhite = Color(0xffcccccc)
