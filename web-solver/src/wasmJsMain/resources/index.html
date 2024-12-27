@@ -5,9 +5,24 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Advent of Code 2024 | Solver</title>
   <link type="text/css" rel="stylesheet" href="styles.css">
-  <script type="application/javascript" src="web-solver.js"></script>
   <link rel="icon" type="image/png" href="favicon.png">
 </head>
 <body>
+<div id="loader-container">
+  <span class="loader"></span>
+</div>
+<script>
+  const start = Date.now();
+</script>
+<script type="application/javascript" src="web-solver.js"></script>
+<script>
+  const end = Date.now();
+  const duration = end - start;
+  const MIN_ANIMATION_TIME = 1000;
+
+  if (duration < MIN_ANIMATION_TIME) {
+    setTimeout(() => document.getElementById("loader-container").remove(), MIN_ANIMATION_TIME - duration);
+  }
+</script>
 </body>
 </html>
