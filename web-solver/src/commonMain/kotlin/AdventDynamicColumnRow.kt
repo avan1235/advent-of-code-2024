@@ -16,7 +16,7 @@ internal sealed class DynamicColumnRowScope {
 }
 
 @Composable
-internal inline fun DynamicColumnRow(
+internal inline fun AdventDynamicColumnRow(
   horizontal: Boolean,
   modifier: Modifier = Modifier,
   content: @Composable DynamicColumnRowScope.() -> Unit,

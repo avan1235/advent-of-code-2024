@@ -13,7 +13,7 @@ import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.Job
 
 @Composable
-internal inline fun DynamicColumnRowScope.ControlElements(
+internal inline fun DynamicColumnRowScope.AdventControlElements(
   horizontal: Boolean,
   selectedDay: AdventDay,
   crossinline onSelectedDayChange: (AdventDay) -> Unit,
@@ -25,7 +25,7 @@ internal inline fun DynamicColumnRowScope.ControlElements(
   crossinline onSolve: () -> Unit,
   runningJob: Job?,
 ) {
-  Dropdown(
+  AdventDropdown(
     preselected = selectedDay,
     onOptionSelected = {
       if (selectedDay != it) {

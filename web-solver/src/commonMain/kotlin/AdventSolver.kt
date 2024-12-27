@@ -128,8 +128,8 @@ internal fun AdventSolver(advent: Advent) {
           }
         }
 
-        DynamicColumnRow(horizontal) {
-          ControlElements(
+        AdventDynamicColumnRow(horizontal) {
+          AdventControlElements(
             horizontal = horizontal,
             selectedDay = selectedDay,
             onSelectedDayChange = { selectedDay = it },
