@@ -52,8 +52,8 @@ internal fun <T> AdventDropdown(
       contentDescription = "open dropdown",
       modifier = Modifier
         .align(Alignment.CenterEnd)
-        .rotate(degree)
         .padding(end = 8.dp)
+        .rotate(degree)
     )
     DropdownMenu(
       expanded = expanded,
