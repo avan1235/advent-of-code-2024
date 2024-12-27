@@ -4,6 +4,7 @@ html, body {
   margin: 0;
   padding: 0;
   overflow: hidden;
+  background: #0f0f23;
 }
 
 #loader-container {
@@ -13,7 +14,7 @@ html, body {
   justify-content: center;
   align-items: center;
   z-index: 999;
-  background: #0f0f23
+  background: #0f0f23;
 }
 
 .loader {
