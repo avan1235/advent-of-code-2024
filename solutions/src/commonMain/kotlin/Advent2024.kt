@@ -1,4 +1,4 @@
-data object Advent2024 : Advent {
+data object Advent2024 : Advent() {
   override val year = 2024
 
   override val days = listOf<AdventDay>(
