@@ -1,7 +1,5 @@
-@file:OptIn(ExperimentalKotlinGradlePluginApi::class, ExperimentalWasmDsl::class)
+@file:OptIn(org.jetbrains.kotlin.gradle.ExperimentalWasmDsl::class)
 
-import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
-import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import java.lang.Runtime.getRuntime
 
 plugins {
@@ -36,8 +34,8 @@ kotlin {
     commonTest.dependencies {
       implementation(project(":solutions"))
 
-      implementation(libs.kotlin.test)
       implementation(libs.procyk.adventofcode.test.runner)
+      implementation(libs.kotlin.test)
     }
   }
 }
