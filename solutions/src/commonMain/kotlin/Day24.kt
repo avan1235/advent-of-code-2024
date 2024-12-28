@@ -1,4 +1,7 @@
 import com.ionspin.kotlin.bignum.integer.BigInteger
+import `in`.procyk.adventofcode.solutions.AdventDay
+import `in`.procyk.adventofcode.solutions.groupSeparatedByBlankLine
+import `in`.procyk.adventofcode.solutions.topologicalSort
 
 data object Day24 : AdventDay(n = 24) {
   override suspend fun SolveContext.solve(lines: List<String>) {

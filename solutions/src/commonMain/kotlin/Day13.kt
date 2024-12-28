@@ -1,5 +1,8 @@
 import com.ionspin.kotlin.bignum.integer.BigInteger
 import com.ionspin.kotlin.bignum.integer.toBigInteger
+import `in`.procyk.adventofcode.solutions.AdventDay
+import `in`.procyk.adventofcode.solutions.groupSeparatedBy
+import `in`.procyk.adventofcode.solutions.lcm
 
 data object Day13 : AdventDay(n = 13) {
   override suspend fun SolveContext.solve(lines: List<String>) {

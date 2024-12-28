@@ -1,3 +1,5 @@
+import `in`.procyk.adventofcode.solutions.AdventDay
+
 data object Day3 : AdventDay(n = 3) {
   override suspend fun SolveContext.solve(lines: List<String>) {
     val memory = lines.joinToString("")

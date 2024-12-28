@@ -1,3 +1,5 @@
+import `in`.procyk.adventofcode.solutions.*
+
 data object Day4 : AdventDay(n = 4) {
   override suspend fun SolveContext.solve(lines: List<String>) {
     val map = lines.toMap()

@@ -1,3 +1,8 @@
+import `in`.procyk.adventofcode.solutions.AdventDay
+import `in`.procyk.adventofcode.solutions.groupSeparatedByBlankLine
+import `in`.procyk.adventofcode.solutions.toDefaultMap
+import `in`.procyk.adventofcode.solutions.topologicalSort
+
 data object Day5 : AdventDay(n = 5) {
   override suspend fun SolveContext.solve(lines: List<String>) {
     val (rawRules, rawUpdates) = lines.groupSeparatedByBlankLine()

@@ -1,3 +1,5 @@
+import `in`.procyk.adventofcode.solutions.*
+
 data object Day8 : AdventDay(n = 8) {
   override suspend fun SolveContext.solve(lines: List<String>) {
     val antennas = lines.toAntennas()

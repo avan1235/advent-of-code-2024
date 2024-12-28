@@ -1,3 +1,7 @@
+import `in`.procyk.adventofcode.solutions.AdventDay
+import `in`.procyk.adventofcode.solutions.groupSeparatedByBlankLine
+import `in`.procyk.adventofcode.solutions.transpose
+
 data object Day25 : AdventDay(n = 25) {
   override suspend fun SolveContext.solve(lines: List<String>) {
     val (locks, keys) = lines.groupSeparatedByBlankLine().partition { it.isLock }

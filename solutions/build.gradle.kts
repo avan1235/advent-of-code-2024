@@ -14,6 +14,7 @@ kotlin {
     macosX64(),
     linuxArm64(),
     linuxX64(),
+    mingwX64(),
   )
   wasmJs {
     browser()
@@ -21,11 +22,7 @@ kotlin {
 
   sourceSets {
     commonMain.dependencies {
-      implementation(libs.kotlinx.coroutines.core)
-      implementation(libs.kotlinx.datetime)
-      implementation(libs.kotlinx.io.core)
-      implementation(libs.kotlinx.collections.immutable)
-      implementation(libs.kotlin.bignum)
+      implementation(libs.procyk.adventofcode.solutions)
     }
   }
 }

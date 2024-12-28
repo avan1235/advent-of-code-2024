@@ -1,3 +1,4 @@
+import `in`.procyk.adventofcode.solutions.AdventDay
 import kotlin.math.abs
 
 data object Day2 : AdventDay(n = 2) {

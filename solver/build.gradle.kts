@@ -1,9 +1,9 @@
 @file:OptIn(ExperimentalKotlinGradlePluginApi::class, ExperimentalWasmDsl::class)
 
+import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpackConfig
-import java.lang.Runtime.getRuntime
 
 plugins {
   alias(libs.plugins.kotlinMultiplatform)
@@ -12,14 +12,16 @@ plugins {
 }
 
 kotlin {
+  jvm()
+
   @OptIn(ExperimentalWasmDsl::class)
   wasmJs {
-    moduleName = "web-solver"
+    moduleName = "solver"
     browser {
       val rootDirPath = project.rootDir.path
       val projectDirPath = project.projectDir.path
       commonWebpackConfig {
-        outputFileName = "web-solver.js"
+        outputFileName = "solver.js"
         devServer = (devServer ?: KotlinWebpackConfig.DevServer()).apply {
           static = (static ?: mutableListOf()).apply {
             // Serve sources to debug inside browser
@@ -36,14 +38,19 @@ kotlin {
     commonMain.dependencies {
       implementation(project(":solutions"))
 
-      implementation(libs.kotlinx.coroutines.core)
-      implementation(libs.kotlinx.datetime)
-
+      implementation(libs.procyk.adventofcode.solver)
       implementation(compose.runtime)
-      implementation(compose.foundation)
-      implementation(compose.material3)
-      implementation(compose.ui)
-      implementation(compose.components.resources)
     }
+    jvmMain.dependencies {
+      implementation(compose.desktop.currentOs)
+    }
+  }
+}
+
+compose.desktop.application {
+  mainClass = "Main_jvmKt"
+
+  nativeDistributions {
+    targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
   }
 }

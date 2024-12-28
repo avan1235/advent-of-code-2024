@@ -1,5 +1,7 @@
 import StoneState.Computed
 import StoneState.InProgress
+import `in`.procyk.adventofcode.solutions.AdventDay
+import `in`.procyk.adventofcode.solutions.parallelMap
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlin.math.floor

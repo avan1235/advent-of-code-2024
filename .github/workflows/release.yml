@@ -61,12 +61,12 @@ jobs:
         run: |
           export GRADLE_USER_HOME=$(pwd)/.gradle
           chmod +x ./gradlew
-          ./gradlew web-solver:wasmJsBrowserDistribution
+          ./gradlew solver:wasmJsBrowserDistribution
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./web-solver/build/dist/wasmJs/productionExecutable
+          publish_dir: ./solver/build/dist/wasmJs/productionExecutable
           force_orphan: true
           cname: adventofcode.2024.procyk.in

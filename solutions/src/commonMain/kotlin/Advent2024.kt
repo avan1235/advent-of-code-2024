@@ -1,3 +1,6 @@
+import `in`.procyk.adventofcode.solutions.Advent
+import `in`.procyk.adventofcode.solutions.AdventDay
+
 data object Advent2024 : Advent() {
   override val year = 2024
 

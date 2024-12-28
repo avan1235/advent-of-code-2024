@@ -1,3 +1,5 @@
+import `in`.procyk.adventofcode.solutions.*
+
 data object Day12 : AdventDay(n = 12) {
   override suspend fun SolveContext.solve(lines: List<String>) {
     val m = Matrix2D(lines.map { it.toList() })

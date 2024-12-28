@@ -1,4 +1,8 @@
 import GuardMap.Direction.*
+import `in`.procyk.adventofcode.solutions.AdventDay
+import `in`.procyk.adventofcode.solutions.V2
+import `in`.procyk.adventofcode.solutions.plus
+import `in`.procyk.adventofcode.solutions.xy
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope

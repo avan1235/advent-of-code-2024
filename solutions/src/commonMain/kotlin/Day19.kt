@@ -1,5 +1,9 @@
-import MutableCharSequenceTrie.Companion.charSequenceTrieOf
 import com.ionspin.kotlin.bignum.integer.BigInteger
+import `in`.procyk.adventofcode.solutions.AdventDay
+import `in`.procyk.adventofcode.solutions.CharSequenceTrie
+import `in`.procyk.adventofcode.solutions.MutableCharSequenceTrie.Companion.charSequenceTrieOf
+import `in`.procyk.adventofcode.solutions.groupSeparatedByBlankLine
+import `in`.procyk.adventofcode.solutions.sum
 
 data object Day19 : AdventDay(n = 19) {
   override suspend fun SolveContext.solve(lines: List<String>) {

@@ -1,3 +1,6 @@
+import `in`.procyk.adventofcode.solutions.AdventDay
+import `in`.procyk.adventofcode.solutions.LazyDefaultMap
+
 data object Day23 : AdventDay(n = 23) {
   override suspend fun SolveContext.solve(lines: List<String>) {
     val N = lines.buildLANConnectionsGraph()

@@ -1,3 +1,5 @@
+import `in`.procyk.adventofcode.solutions.AdventDay
+import `in`.procyk.adventofcode.solutions.parallelMap
 import kotlin.math.pow
 
 data object Day7 : AdventDay(n = 7) {

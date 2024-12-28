@@ -1,3 +1,5 @@
+import `in`.procyk.adventofcode.solutions.*
+
 data object Day10 : AdventDay(n = 10) {
   override suspend fun SolveContext.solve(lines: List<String>) {
     val map = lines.toTopographicMap()

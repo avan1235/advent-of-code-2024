@@ -2,6 +2,8 @@ import WarehouseMap.Element.BOX
 import WarehouseMap.Element.WALL
 import WideWarehouseMap.Element.*
 
+import `in`.procyk.adventofcode.solutions.*
+
 data object Day15 : AdventDay(n = 15) {
   override suspend fun SolveContext.solve(lines: List<String>) {
     val (rawMap, rawMoves) = lines.groupSeparatedByBlankLine()

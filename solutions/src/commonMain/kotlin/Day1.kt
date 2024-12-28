@@ -1,3 +1,6 @@
+import `in`.procyk.adventofcode.solutions.AdventDay
+import `in`.procyk.adventofcode.solutions.toDefaultMap
+import `in`.procyk.adventofcode.solutions.transpose
 import kotlin.math.abs
 
 data object Day1 : AdventDay(n = 1) {

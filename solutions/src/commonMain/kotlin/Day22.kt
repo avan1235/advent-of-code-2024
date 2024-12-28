@@ -1,5 +1,8 @@
 import com.ionspin.kotlin.bignum.integer.BigInteger
 import com.ionspin.kotlin.bignum.integer.toBigInteger
+import `in`.procyk.adventofcode.solutions.AdventDay
+import `in`.procyk.adventofcode.solutions.parallelMap
+import `in`.procyk.adventofcode.solutions.sum
 
 data object Day22 : AdventDay(n = 22) {
   override suspend fun SolveContext.solve(lines: List<String>) {

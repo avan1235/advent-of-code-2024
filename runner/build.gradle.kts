@@ -19,6 +19,7 @@ kotlin {
     macosX64(),
     linuxArm64(),
     linuxX64(),
+    mingwX64(),
   ).forEach { target ->
     target.binaries.executable {
       entryPoint = "main"
@@ -29,15 +30,14 @@ kotlin {
     commonMain.dependencies {
       implementation(project(":solutions"))
 
-      implementation(libs.kotlinx.coroutines.core)
-      implementation(libs.kotlinx.datetime)
-      implementation(libs.kotlinx.io.core)
-      implementation(libs.kotlin.bignum)
+      implementation(libs.procyk.adventofcode.runner)
     }
 
     commonTest.dependencies {
       implementation(project(":solutions"))
+
       implementation(libs.kotlin.test)
+      implementation(libs.procyk.adventofcode.test.runner)
     }
   }
 }

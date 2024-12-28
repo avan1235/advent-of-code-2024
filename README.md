@@ -39,4 +39,4 @@ To run all tests, simply call `./gradlew test`
 The problems solutions are included in project, but for every of them you can also find some corresponding article at my
 website, where I discuss not only the given problem, but also some cool features of Kotlin or I deep dive into some
 language constructions.
-                       |
+|

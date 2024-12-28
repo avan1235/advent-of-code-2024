@@ -30,4 +30,4 @@ dependencyResolutionManagement {
 
 include(":runner")
 include(":solutions")
-include(":web-solver")
+include(":solver")

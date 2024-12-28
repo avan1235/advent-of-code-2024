@@ -1,5 +1,6 @@
-import WeightedGraph.D
 import com.ionspin.kotlin.bignum.integer.BigInteger
+import `in`.procyk.adventofcode.solutions.*
+import `in`.procyk.adventofcode.solutions.WeightedGraph.D
 
 data object Day16 : AdventDay(n = 16) {
   override suspend fun SolveContext.solve(lines: List<String>) {
