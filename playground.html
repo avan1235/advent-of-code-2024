@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Advent of Code 2024 | Playground</title>
+  <link type="text/css" rel="stylesheet" href="styles.css">
+  <link rel="icon" type="image/png" href="favicon.png">
+  <script src="https://unpkg.com/kotlin-playground@1"></script>
+</head>
+<body>
+<div
+  class="snippet"
+  theme="darcula"
+  lines="true"
+  style="display: none"
+  data-highlight-only
+  auto-indent="true"
+  indent="2"
+>
+  <div id="code" style="visibility: hidden"></div>
+</div>
+<script>
+  const queryDict = {};
+  location.search.substr(1).split("&").forEach(function (item) {
+    const [key, value] = item.split("=");
+    queryDict[key] = value;
+  });
+  const year = queryDict["year"];
+  const day = queryDict["day"];
+  const baseUrl = `https://raw.githubusercontent.com/avan1235/advent-of-code-${year}/refs/heads/master/solutions/src/commonMain/kotlin/`;
+
+  function fetchCode(url) {
+    return fetch(url).then(r => r.text())
+  }
+
+  function vhToPixels(vh) {
+    return Math.round(window.innerHeight / (100 / vh));
+  }
+
+  fetchCode(`${baseUrl}Day${day}.kt`)
+    .then(code => {
+      const codeElement = document.getElementById("code");
+      codeElement.setAttribute("data-output-height", `${vhToPixels(100)}`);
+      codeElement.textContent = code;
+      KotlinPlayground('.snippet');
+    });
+</script>
+</body>
+</html>
