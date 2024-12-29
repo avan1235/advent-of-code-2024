@@ -21,7 +21,7 @@ private fun Graph<V2>.sum(checkIfVisited: Boolean): Int = nodes.sumOf { v ->
 
 private fun List<String>.toTopographicMap(): Graph<V2> = let { lines ->
   val (sizeX, sizeY) = lines.size2D
-  val data = Matrix2D(lines.map { it.toList() })
+  val data = M2(lines)
 
   object : Graph<V2> {
     private val directions = listOf(

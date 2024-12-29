@@ -18,7 +18,7 @@ private data class Racetrack(
   val start: V2,
   val end: V2,
   val size: V2,
-  val original: Matrix2D<Char>,
+  val original: M2<Char>,
   val afterAtPath: Map<V2, Set<V2>>
 ) {
   suspend fun countCheats(length: Int): Long {
@@ -42,7 +42,7 @@ private data class Racetrack(
   }
 }
 
-private fun List<String>.toRacetrack(): Racetrack = Matrix2D(map(String::toList)).let { m ->
+private fun List<String>.toRacetrack(): Racetrack = M2(this).let { m ->
   val g = LazyDefaultMap<V2, MutableSet<E<V2, Unit>>>(::mutableSetOf)
   val size = m.size2D
   val (sizeX, sizeY) = size

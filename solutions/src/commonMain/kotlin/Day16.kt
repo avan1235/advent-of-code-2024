@@ -52,7 +52,7 @@ private class ReindeerMaze(
 }
 
 private fun List<String>.toReindeerMaze(): ReindeerMaze {
-  val matrix = Matrix2D(map(String::toList))
+  val matrix = M2(this)
   val (sizeX, sizeY) = size2D
   var start: V2? = null
   var end: V2? = null

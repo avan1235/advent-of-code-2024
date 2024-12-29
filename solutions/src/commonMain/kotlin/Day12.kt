@@ -2,7 +2,7 @@ import `in`.procyk.adventofcode.solutions.*
 
 data object Day12 : AdventDay(n = 12) {
   override suspend fun SolveContext.solve(lines: List<String>) {
-    val m = Matrix2D(lines.map { it.toList() })
+    val m = M2(lines)
 
     val g = object : Graph<V2> {
       override val nodes
